@@ -7,18 +7,18 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import useSession from "@/hooks/useSession";
 
 const TabsLayout = () => {
-  const {
-    status: { authenticated },
-    isLoading,
-  } = useSession();
+  // const {
+  //   status: { authenticated },
+  //   isLoading,
+  // } = useSession();
 
-  if (isLoading) {
-    return <Text>Loading....</Text>;
-  }
+  // if (isLoading) {
+  //   return <Text>Loading....</Text>;
+  // }
 
-  if (!authenticated) {
-    return <Redirect href="/sign-in" />;
-  }
+  // if (!authenticated) {
+  //   return <Redirect href="/sign-in" />;
+  // }
 
   return (
     <Tabs
@@ -49,6 +49,18 @@ const TabsLayout = () => {
           tabBarIcon: ({ color, focused }) => (
             <FontAwesome
               name={focused ? "user-circle" : "user-circle-o"}
+              size={28}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="(calendar)/index"
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome
+              name={focused ? "calendar" : "calendar"}
               size={28}
               color={color}
             />
