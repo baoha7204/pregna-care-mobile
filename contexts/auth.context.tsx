@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   useCallback,
   useEffect,
@@ -9,6 +9,7 @@ import { SplashScreen } from "expo-router";
 
 import { useStorageState } from "../hooks/useStorageState";
 import { customAxios } from "@/api/core";
+import axios from "axios";
 
 type AuthStatus = {
   session?: string | null;

@@ -3,6 +3,7 @@ import { Button } from "@ant-design/react-native";
 
 import useSession from "@/hooks/useSession";
 import { SafeAreaView } from "react-native-safe-area-context";
+import React from "react";
 
 const ProfileScreen = () => {
   const { signOut } = useSession();
