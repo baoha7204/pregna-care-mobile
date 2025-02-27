@@ -12,11 +12,6 @@ const SigninScreen = () => {
   return (
     <View style={commonStyles.container}>
       <AuthForm mode="sign-in" onSubmit={signIn} />
-      {/* <Link href="/sign-up" asChild>
-        <TouchableOpacity>
-          <Text style={commonStyles.text}>Don't have an account? Sign up</Text>
-        </TouchableOpacity>
-      </Link> */}
     </View>
   );
 };
