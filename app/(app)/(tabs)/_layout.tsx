@@ -7,30 +7,37 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import useSession from "@/hooks/useSession";
 import React from "react";
 import { theme } from "@/styles/theme";
+import CalendarHeaderRight from "@/components/Header/CalendarHeaderRight";
+import FetusManageHeader from "@/components/Header/FetusManageHeader";
 
 const TabsLayout = () => {
-  // const {
-  //   status: { authenticated },
-  //   isLoading,
-  // } = useSession();
+  const {
+    status: { authenticated },
+    isLoading,
+    user,
+    currentFetus,
+    switchFetus,
+  } = useSession();
 
-  // if (isLoading) {
-  //   return <Text>Loading....</Text>;
-  // }
+  if (isLoading) {
+    return <Text>Loading....</Text>;
+  }
 
-  // if (!authenticated) {
-  //   return <Redirect href="/sign-in" />;
-  // }
+  if (!authenticated) {
+    return <Redirect href="/sign-in" />;
+  }
 
   return (
     <Tabs
       screenOptions={{
-        tabBarShowLabel: false,
-        headerShown: false,
         tabBarActiveTintColor: theme.primary,
-        tabBarInactiveTintColor: theme.primaryLight,
-        tabBarStyle: {
-          backgroundColor: theme.secondaryLight,
+        headerStyle: {
+          backgroundColor: theme.primary,
+        },
+        headerTitleStyle: {
+          color: theme.textPrimary,
+          fontSize: 20,
+          marginBottom: 10,
         },
       }}
     >
@@ -44,16 +51,14 @@ const TabsLayout = () => {
               color={color}
             />
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="(profile)/index"
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <FontAwesome
-              name={focused ? "user-circle" : "user-circle-o"}
-              size={28}
-              color={color}
+          tabBarLabel: "Home",
+          headerTitle: () => null,
+          header: (props) => (
+            <FetusManageHeader
+              fetuses={user?.fetuses}
+              currentFetus={currentFetus}
+              onSelectedFetus={switchFetus}
+              {...props}
             />
           ),
         }}
@@ -68,6 +73,23 @@ const TabsLayout = () => {
               color={color}
             />
           ),
+          tabBarLabel: "Calendar",
+          title: "My Calendar",
+          headerRight: CalendarHeaderRight,
+        }}
+      />
+      <Tabs.Screen
+        name="(profile)/index"
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome
+              name={focused ? "user-circle" : "user-circle-o"}
+              size={28}
+              color={color}
+            />
+          ),
+          tabBarLabel: "Profile",
+          title: "My Profile",
         }}
       />
     </Tabs>

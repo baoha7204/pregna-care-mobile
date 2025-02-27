@@ -1,15 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Animated,
   TouchableOpacity,
-} from 'react-native';
-import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
-import { Feather } from '@expo/vector-icons';
-import { CalendarEvent } from '@/types/events';
-import { symptoms } from '@/app/data/symptoms';
+} from "react-native";
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+} from "react-native-gesture-handler";
+import { Feather } from "@expo/vector-icons";
+import { CalendarEvent } from "@/types/events";
+import { symptoms } from "@/data/symptoms";
 
 interface EventDetailsProps {
   event: CalendarEvent;
@@ -34,7 +37,8 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
 
   const onHandlerStateChange = ({ nativeEvent }: any) => {
     const { state, translationX } = nativeEvent;
-    if (state === 5) { // END state
+    if (state === 5) {
+      // END state
       if (translationX < -50) {
         // Show delete button
         Animated.spring(translateX, {
@@ -51,7 +55,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
     }
   };
 
-  const selectedSymptoms = symptoms.filter(s => 
+  const selectedSymptoms = symptoms.filter((s) =>
     event.symptoms.includes(s.id)
   );
 
@@ -61,12 +65,14 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
         onGestureEvent={onGestureEvent}
         onHandlerStateChange={onHandlerStateChange}
       >
-        <Animated.View style={[
-          styles.container,
-          {
-            transform: [{ translateX }],
-          }
-        ]}>
+        <Animated.View
+          style={[
+            styles.container,
+            {
+              transform: [{ translateX }],
+            },
+          ]}
+        >
           <TouchableOpacity
             style={styles.content}
             onPress={() => onEdit(event)}
@@ -86,7 +92,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
             </View>
             <Feather name="chevron-right" size={20} color="#9CA3AF" />
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={styles.deleteButton}
             onPress={() => onDelete(event.id)}
@@ -101,18 +107,18 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
 
 const styles = StyleSheet.create({
   gestureContainer: {
-    backgroundColor: '#002F35',
+    backgroundColor: "#002F35",
   },
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginHorizontal: 16,
     marginBottom: 8,
   },
   content: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#004952',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#004952",
     borderRadius: 12,
     padding: 16,
     paddingRight: 12,
@@ -121,17 +127,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   note: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
     marginBottom: 4,
   },
   symptomsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   symptomTag: {
-    backgroundColor: '#0D3A41',
+    backgroundColor: "#0D3A41",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 16,
@@ -140,9 +146,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   deleteButton: {
-    backgroundColor: '#DC2626',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#DC2626",
+    justifyContent: "center",
+    alignItems: "center",
     width: 30,
     borderRadius: 12,
     marginLeft: 5,
