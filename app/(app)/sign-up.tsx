@@ -5,6 +5,7 @@ import { View } from "@ant-design/react-native";
 import useSession from "@/hooks/useSession";
 import AuthForm from "@/components/AuthForm";
 import { commonStyles } from "@/styles/common";
+import React from "react";
 
 const SignupScreen = () => {
   const { signUp } = useSession();
@@ -12,11 +13,6 @@ const SignupScreen = () => {
   return (
     <View style={commonStyles.container}>
       <AuthForm mode="sign-up" onSubmit={signUp} />
-      <Link href="/sign-in" asChild>
-        <TouchableOpacity>
-          <Text style={commonStyles.text}>Have an account? Sign in</Text>
-        </TouchableOpacity>
-      </Link>
     </View>
   );
 };
