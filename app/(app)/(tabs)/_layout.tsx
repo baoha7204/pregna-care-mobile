@@ -6,6 +6,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import useSession from "@/hooks/useSession";
 import React from "react";
+import { theme } from "@/styles/theme";
 
 const TabsLayout = () => {
   // const {
@@ -26,9 +27,10 @@ const TabsLayout = () => {
       screenOptions={{
         tabBarShowLabel: false,
         headerShown: false,
-        tabBarActiveTintColor: "orange",
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.primaryLight,
         tabBarStyle: {
-          backgroundColor: "#25292e",
+          backgroundColor: theme.secondaryLight,
         },
       }}
     >
