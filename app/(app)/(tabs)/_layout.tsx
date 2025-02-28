@@ -1,11 +1,11 @@
-import { Redirect, Tabs } from "expo-router";
-import { Text } from "react-native";
+import { Redirect, Tabs } from 'expo-router';
+import { Text } from 'react-native';
 
-import Ionicons from "@expo/vector-icons/Ionicons";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Ionicons from '@expo/vector-icons/Ionicons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-import useSession from "@/hooks/useSession";
-import React from "react";
+import useSession from '@/hooks/useSession';
+import React from 'react';
 
 const TabsLayout = () => {
   const {
@@ -18,7 +18,7 @@ const TabsLayout = () => {
   }
 
   if (!authenticated) {
-    return <Redirect href="/sign-in" />;
+    return <Redirect href='/sign-in' />;
   }
 
   return (
@@ -26,18 +26,18 @@ const TabsLayout = () => {
       screenOptions={{
         tabBarShowLabel: false,
         headerShown: false,
-        tabBarActiveTintColor: "orange",
+        tabBarActiveTintColor: 'orange',
         tabBarStyle: {
-          backgroundColor: "#25292e",
+          backgroundColor: '#25292e',
         },
       }}
     >
       <Tabs.Screen
-        name="(home)/index"
+        name='(home)/index'
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? "home-sharp" : "home-outline"}
+              name={focused ? 'home-sharp' : 'home-outline'}
               size={30}
               color={color}
             />
@@ -45,11 +45,11 @@ const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="(profile)/index"
+        name='(more)'
         options={{
           tabBarIcon: ({ color, focused }) => (
             <FontAwesome
-              name={focused ? "user-circle" : "user-circle-o"}
+              name={focused ? 'user-circle' : 'user-circle-o'}
               size={28}
               color={color}
             />
