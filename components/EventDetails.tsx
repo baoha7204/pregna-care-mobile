@@ -107,7 +107,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
 
 const styles = StyleSheet.create({
   gestureContainer: {
-    backgroundColor: "#002F35",
+    backgroundColor: "#FFF5F5",
   },
   container: {
     flexDirection: "row",
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#004952",
+    backgroundColor: "#FFCCC6",
     borderRadius: 12,
     padding: 16,
     paddingRight: 12,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   note: {
-    color: "white",
+    color: "#000",
     fontSize: 16,
     marginBottom: 4,
   },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   symptomTag: {
-    backgroundColor: "#0D3A41",
+    backgroundColor: "#FFAAA0",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 16,
@@ -153,4 +153,5 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginLeft: 5,
   },
-});
+})
+

@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: "#004952",
+    backgroundColor: "#FFF5F5",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 20,
@@ -148,12 +148,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#1F2937",
+    borderBottomColor: "#DDD",
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "white",
+    color: "#000",
   },
   modalBody: {
     padding: 20,
@@ -161,14 +161,14 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "600",
-    color: "white",
+    color: "#000",
     marginBottom: 8,
   },
   input: {
-    backgroundColor: "#002F35",
+    backgroundColor: "#FFCCC6",
     borderRadius: 12,
     padding: 12,
-    color: "white",
+    color: "#000",
     marginBottom: 20,
     minHeight: 100,
     textAlignVertical: "top",
@@ -181,40 +181,40 @@ const styles = StyleSheet.create({
   symptomButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#002F35",
+    backgroundColor: "#FFCCC6",
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 20,
     gap: 6,
   },
   symptomButtonSelected: {
-    backgroundColor: "#80DEEA",
+    backgroundColor: "#FFAAA0",
   },
   symptomIcon: {
     fontSize: 16,
   },
   symptomText: {
-    color: "white",
+    color: "#000",
     fontSize: 14,
   },
   symptomTextSelected: {
-    color: "#002F35",
+    color: "#000",
     fontWeight: "600",
   },
   modalFooter: {
     padding: 20,
     borderTopWidth: 1,
-    borderTopColor: "#1F2937",
+    borderTopColor: "#DDD",
   },
   saveButton: {
-    backgroundColor: "#80DEEA",
+    backgroundColor: "#FFAAA0",
     padding: 16,
     borderRadius: 30,
     alignItems: "center",
   },
   saveButtonText: {
-    color: "#002F35",
+    color: "#000",
     fontSize: 16,
     fontWeight: "600",
   },
-});
+})

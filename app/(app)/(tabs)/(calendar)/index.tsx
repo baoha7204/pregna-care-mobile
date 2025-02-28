@@ -23,7 +23,7 @@ import {
   addDays,
   isSameWeek,
 } from "date-fns";
-import { vi } from "date-fns/locale";
+
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AddEventModal } from "@/components/AddEventModal";
 import { EventDetails } from "@/components/EventDetails";
@@ -88,7 +88,7 @@ const CalendarScreen = () => {
   );
 
   const renderWeekDays = () => {
-    const weekDays = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+    const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     return (
       <View style={styles.weekDays}>
         {weekDays.map((day, index) => (
@@ -195,20 +195,20 @@ const CalendarScreen = () => {
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.progressContainer}>
-            <FontAwesome5 name="baby-carriage" size={20} color="#FFD700" />
+            <FontAwesome5 name="baby-carriage" size={20} color="Brown" />
             <Text style={styles.progressText}>{formatPregnancyWeek()}</Text>
           </View>
           <View style={styles.calendarContainer}>
             <View style={styles.monthHeader}>
               <Text style={styles.monthTitle}>
-                {format(currentDate, "MMMM yyyy", { locale: vi })}
+                {format(currentDate, "MMMM yyyy")}
               </Text>
               <View style={styles.monthNav}>
                 <TouchableOpacity onPress={onPreviousMonth}>
-                  <Feather name="chevron-left" size={24} color="white" />
+                  <Feather name="chevron-left" size={24} color="brown" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={onNextMonth}>
-                  <Feather name="chevron-right" size={24} color="white" />
+                  <Feather name="chevron-right" size={24} color="brown" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -220,7 +220,7 @@ const CalendarScreen = () => {
               {format(selectedDate, "d")}
             </Text>
             <Text style={styles.selectedDateDay}>
-              {format(selectedDate, "EEEE", { locale: vi }).toUpperCase()}
+              {format(selectedDate, "EEEE").toUpperCase()}
             </Text>
             <Text style={styles.selectedDateMonth}>
               {format(selectedDate, "MM/yyyy")}
@@ -262,7 +262,7 @@ const CalendarScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#002F35",
+    backgroundColor: "#FFF5F5",
   },
   header: {
     flexDirection: "row",
@@ -311,15 +311,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 16,
     gap: 8,
-    backgroundColor: "#004952",
+    backgroundColor: "#FFCCC6",
   },
   progressText: {
-    color: "white",
+    color: "#000",
     fontSize: 16,
   },
   calendarContainer: {
     padding: 16,
-    backgroundColor: "#004952",
+    backgroundColor: "white",
   },
   monthHeader: {
     flexDirection: "row",
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
   monthTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "white",
+    color: "#000",
     textTransform: "capitalize",
   },
   monthNav: {
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
     marginRight: -5,
   },
   weekDay: {
-    color: "#9CA3AF",
+    color: "#352D2D",
     width: 40,
     textAlign: "center",
     fontSize: 15,
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
   },
   calendarGrid: {
     flexDirection: "column",
-    backgroundColor: "#004952",
+    backgroundColor: "#FFF",
   },
   weekRow: {
     flexDirection: "row",
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   currentWeekContainer: {
-    backgroundColor: "#355F51",
+    backgroundColor: "#FFCCC6",
     borderRadius: 30,
     marginHorizontal: -4,
     paddingHorizontal: 4,
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   currentWeekNumber: {
-    color: "#80DEEA",
+    color: "#fff",
     fontWeight: "bold",
   },
   day: {
@@ -396,60 +396,60 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   selectedDay: {
-    backgroundColor: "#0EA5E9",
+    backgroundColor: "#EE7A7A",
   },
   todayDay: {
-    backgroundColor: "#007A87",
+    backgroundColor: "#FFAAA0",
     borderWidth: 2,
-    borderColor: "#80DEEA",
+    borderColor: "#FFCCC6",
   },
   dayText: {
-    color: "white",
+    color: "#000",
     fontSize: 16,
     fontWeight: "500",
   },
   otherMonthDay: {
-    color: "#4B5563",
+    color: "lightgray",
   },
   selectedDayText: {
     color: "white",
     fontWeight: "bold",
   },
   todayText: {
-    color: "white",
+    color: "#000",
     fontWeight: "bold",
   },
   selectedDateInfo: {
     padding: 16,
-    backgroundColor: "#002F35",
+    backgroundColor: "#FFF5F5",
   },
   selectedDateNumber: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "white",
+    color: "#000",
   },
   selectedDateDay: {
     fontSize: 16,
-    color: "white",
+    color: "#000",
     marginTop: 4,
   },
   selectedDateMonth: {
     fontSize: 16,
-    color: "white",
+    color: "#000",
     marginTop: 2,
   },
   addEventButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#80DEEA",
+    backgroundColor: "#FFAAA0",
     margin: 16,
     padding: 16,
     borderRadius: 30,
     gap: 8,
   },
   addEventText: {
-    color: "#002F35",
+    color: "#000",
     fontSize: 16,
     fontWeight: "600",
   },
@@ -459,8 +459,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: "#80DEEA",
+    backgroundColor: "#FFAAA0",
   },
-});
-
+})
 export default CalendarScreen;

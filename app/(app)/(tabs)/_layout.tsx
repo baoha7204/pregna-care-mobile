@@ -11,21 +11,21 @@ import CalendarHeaderRight from "@/components/Header/CalendarHeaderRight";
 import FetusManageHeader from "@/components/Header/FetusManageHeader";
 
 const TabsLayout = () => {
-  const {
-    status: { authenticated },
-    isLoading,
-    user,
-    currentFetus,
-    switchFetus,
-  } = useSession();
+  // const {
+  //   status: { authenticated },
+  //   isLoading,
+  //   user,
+  //   currentFetus,
+  //   switchFetus,
+  // } = useSession();
 
-  if (isLoading) {
-    return <Text>Loading....</Text>;
-  }
+  // if (isLoading) {
+  //   return <Text>Loading....</Text>;
+  // }
 
-  if (!authenticated) {
-    return <Redirect href="/sign-in" />;
-  }
+  // if (!authenticated) {
+  //   return <Redirect href="/sign-in" />;
+  // }
 
   return (
     <Tabs
@@ -53,14 +53,14 @@ const TabsLayout = () => {
           ),
           tabBarLabel: "Home",
           headerTitle: () => null,
-          header: (props) => (
-            <FetusManageHeader
-              fetuses={user?.fetuses}
-              currentFetus={currentFetus}
-              onSelectedFetus={switchFetus}
-              {...props}
-            />
-          ),
+          // header: (props) => (
+          //   <FetusManageHeader
+          //     fetuses={user?.fetuses}
+          //     currentFetus={currentFetus}
+          //     onSelectedFetus={switchFetus}
+          //     {...props}
+          //   />
+          // ),
         }}
       />
       <Tabs.Screen
