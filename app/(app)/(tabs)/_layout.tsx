@@ -6,11 +6,17 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import useSession from "@/hooks/useSession";
 import React from "react";
+import { theme } from "@/styles/theme";
+import CalendarHeaderRight from "@/components/Header/CalendarHeaderRight";
+import FetusManageHeader from "@/components/Header/FetusManageHeader";
 
 const TabsLayout = () => {
   const {
     status: { authenticated },
     isLoading,
+    user,
+    currentFetus,
+    switchFetus,
   } = useSession();
 
   if (isLoading) {
@@ -24,11 +30,14 @@ const TabsLayout = () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarShowLabel: false,
-        headerShown: false,
-        tabBarActiveTintColor: "orange",
-        tabBarStyle: {
-          backgroundColor: "#25292e",
+        tabBarActiveTintColor: theme.primary,
+        headerStyle: {
+          backgroundColor: theme.primary,
+        },
+        headerTitleStyle: {
+          color: theme.textPrimary,
+          fontSize: 20,
+          marginBottom: 10,
         },
       }}
     >
@@ -42,6 +51,31 @@ const TabsLayout = () => {
               color={color}
             />
           ),
+          tabBarLabel: "Home",
+          headerTitle: () => null,
+          header: (props) => (
+            <FetusManageHeader
+              fetuses={user?.fetuses}
+              currentFetus={currentFetus}
+              onSelectedFetus={switchFetus}
+              {...props}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="(calendar)/index"
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome
+              name={focused ? "calendar" : "calendar"}
+              size={28}
+              color={color}
+            />
+          ),
+          tabBarLabel: "Calendar",
+          title: "My Calendar",
+          headerRight: CalendarHeaderRight,
         }}
       />
       <Tabs.Screen
@@ -54,6 +88,8 @@ const TabsLayout = () => {
               color={color}
             />
           ),
+          tabBarLabel: "Profile",
+          title: "My Profile",
         }}
       />
     </Tabs>
