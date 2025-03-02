@@ -79,7 +79,7 @@ const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="(profile)/index"
+        name="(profile)"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <FontAwesome
@@ -89,7 +89,7 @@ const TabsLayout = () => {
             />
           ),
           tabBarLabel: "Profile",
-          title: "My Profile",
+          headerShown: false,
         }}
       />
     </Tabs>
