@@ -29,8 +29,11 @@ import { AddEventModal } from "@/components/AddEventModal";
 import { EventDetails } from "@/components/EventDetails";
 import useEvents from "@/hooks/useEvents";
 import { calculatePregnancyWeek } from "@/utils/core";
+import useSession from "@/hooks/useSession";
+import { theme } from "@/styles/theme";
 
 const CalendarScreen = () => {
+  const { currentFetus } = useSession();
   const {
     events,
     editingEvent,
@@ -112,7 +115,9 @@ const CalendarScreen = () => {
       <View style={styles.calendarGrid}>
         {weeks.map((week, weekIndex) => {
           const date = week[0];
-          const weekNumber = getWeek(date, { weekStartsOn: 1 });
+          const weekNumber = currentFetus
+            ? calculatePregnancyWeek(currentFetus.dueDate, date)
+            : getWeek(date, { weekStartsOn: 1 });
           const isCurrentWeek = isSameWeek(date, today, { weekStartsOn: 1 });
 
           return (
@@ -124,14 +129,16 @@ const CalendarScreen = () => {
               ]}
             >
               <View style={styles.weekNumberContainer}>
-                <Text
-                  style={[
-                    styles.weekNumber,
-                    isCurrentWeek && styles.currentWeekNumber,
-                  ]}
-                >
-                  wk {weekNumber}
-                </Text>
+                {weekNumber > 0 && weekNumber < 41 && (
+                  <Text
+                    style={[
+                      styles.weekNumber,
+                      isCurrentWeek && styles.currentWeekNumber,
+                    ]}
+                  >
+                    wk {weekNumber}
+                  </Text>
+                )}
               </View>
               <View style={styles.daysRow}>
                 {week.map((date, dayIndex) => {
@@ -174,7 +181,9 @@ const CalendarScreen = () => {
   };
 
   const formatPregnancyWeek = () => {
-    const weeks = calculatePregnancyWeek(new Date().getTime() / 1000);
+    if (!currentFetus) return "No baby yet";
+
+    const weeks = currentFetus.weeks;
 
     if (weeks >= 27 && weeks <= 40) {
       return `${weeks} weeks, 3rd trimester`;
@@ -459,7 +468,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: "#FFAAA0",
+    backgroundColor: theme.secondaryLight,
   },
-})
+});
 export default CalendarScreen;

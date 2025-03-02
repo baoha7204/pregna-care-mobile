@@ -6,7 +6,6 @@ const HomeScreen = () => {
   return (
     <SafeAreaView>
       <Text>Home screen</Text>
-      
     </SafeAreaView>
   );
 };

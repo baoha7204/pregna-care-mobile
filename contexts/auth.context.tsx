@@ -11,6 +11,7 @@ import { useStorageState } from "../hooks/useStorageState";
 import { customAxios } from "@/api/core";
 import { FetusGender, UserRoles } from "@/types/user";
 import { calculatePregnancyWeek } from "@/utils/core";
+import { ApiResponse } from "@/types/core";
 
 export type Fetus = {
   id: string;
@@ -24,7 +25,7 @@ type User = {
   email: string;
   role: UserRoles;
   avatarUrl: string | null;
-  fetuses: Omit<Fetus, "weeks">[];
+  fetuses: Fetus[];
 };
 
 type AuthStatus = {
@@ -100,8 +101,21 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const result = await customAxios.get("/users/self");
-        setUser(result.data.data);
+        const result = await customAxios.get<ApiResponse<User | null>>(
+          "/users/self"
+        );
+
+        // caclulate pregnancy weeks
+        let user = result.data.data;
+        if (user?.fetuses.length) {
+          user.fetuses = user.fetuses.map((fetus) => {
+            const weeks = calculatePregnancyWeek(fetus.dueDate, new Date());
+            return { ...fetus, weeks };
+          });
+          setCurrentFetus(user.fetuses[0]);
+        }
+
+        setUser(user);
       } catch (error) {
         console.error("Failed to fetch user:", error);
         setUser(null);
@@ -120,14 +134,6 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
       fetchUser();
     }
   }, [session]);
-
-  useEffect(() => {
-    if (user && user.fetuses.length) {
-      const selectedFetus = user.fetuses[0];
-      const weeks = calculatePregnancyWeek(selectedFetus.dueDate);
-      setCurrentFetus({ ...selectedFetus, weeks });
-    }
-  }, [user?.fetuses]);
 
   useEffect(() => {
     if (isLoading) {

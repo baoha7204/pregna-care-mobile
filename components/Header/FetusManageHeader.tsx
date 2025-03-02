@@ -8,7 +8,7 @@ import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
 import { Fetus } from "@/contexts/auth.context";
 
 type FetusManageHeaderProps = BottomTabHeaderProps & {
-  fetuses?: Omit<Fetus, "weeks">[];
+  fetuses?: Fetus[];
   currentFetus: Fetus | null;
   onSelectedFetus: (fetus: Fetus) => void;
 };

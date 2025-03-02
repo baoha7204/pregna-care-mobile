@@ -12,14 +12,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 
 import { Fetus } from "@/contexts/auth.context";
-import { calculatePregnancyWeek } from "@/utils/core";
 import { theme } from "@/styles/theme";
 
 type FetusSelectionModalProps = {
   visible: boolean;
   onClose: () => void;
   onSelect: (newFetus: Fetus) => void;
-  fetuses: Omit<Fetus, "weeks">[];
+  fetuses: Fetus[];
   currentFetus: Fetus | null;
 };
 
@@ -30,26 +29,20 @@ const FetusSelectionModal = ({
   fetuses,
   currentFetus,
 }: FetusSelectionModalProps) => {
-  const updatedFetuses = useMemo(() => {
-    return fetuses.map((fetus) => ({
-      ...fetus,
-      weeks: calculatePregnancyWeek(fetus.dueDate),
-    }));
-  }, [fetuses]);
-
   return (
     <SafeAreaView style={styles.modalContainer}>
       <Modal animationType="fade" transparent={true} visible={visible}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Baby List</Text>
               <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                 <Feather name="x" size={24} color="#333" />
               </TouchableOpacity>
             </View>
 
             <ScrollView style={styles.babyList}>
-              {updatedFetuses.map((fetus) => (
+              {fetuses.map((fetus) => (
                 <TouchableOpacity
                   key={fetus.id}
                   style={[
@@ -100,6 +93,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+  },
   modalContent: {
     width: "100%",
     maxWidth: 400,
@@ -119,11 +117,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: theme.borderPrimary,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
   },
   closeButton: {
     padding: 4,

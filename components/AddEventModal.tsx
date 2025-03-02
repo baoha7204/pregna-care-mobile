@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { symptoms } from "@/data/symptoms";
+import { theme } from "@/styles/theme";
 
 interface CalendarEvent {
   id: string;
@@ -74,7 +75,7 @@ export const AddEventModal = ({
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Add New Event</Text>
             <TouchableOpacity onPress={onClose}>
-              <Feather name="x" size={24} color="white" />
+              <Feather name="x" size={24} color={theme.secondary} />
             </TouchableOpacity>
           </View>
 
@@ -217,4 +218,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-})
+});
