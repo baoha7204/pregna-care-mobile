@@ -1,5 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Link } from "expo-router";
+import { StyleSheet, View } from "react-native";
 
 import AuthForm from "@/components/AuthForm";
 import useSession from "@/hooks/useSession";

@@ -29,11 +29,11 @@ import { AddEventModal } from "@/components/AddEventModal";
 import { EventDetails } from "@/components/EventDetails";
 import useEvents from "@/hooks/useEvents";
 import { calculatePregnancyWeek } from "@/utils/core";
-import useSession from "@/hooks/useSession";
 import { theme } from "@/styles/theme";
+import useFetuses from "@/hooks/useFetuses";
 
 const CalendarScreen = () => {
-  const { currentFetus } = useSession();
+  const { currentFetus } = useFetuses();
   const {
     events,
     editingEvent,

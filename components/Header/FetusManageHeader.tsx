@@ -5,7 +5,7 @@ import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import FetusSelectionModal from "./FetusSelectionModal";
 import { theme } from "@/styles/theme";
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
-import { Fetus } from "@/contexts/auth.context";
+import { Fetus } from "@/contexts/fetuses.context";
 
 type FetusManageHeaderProps = BottomTabHeaderProps & {
   fetuses?: Fetus[];

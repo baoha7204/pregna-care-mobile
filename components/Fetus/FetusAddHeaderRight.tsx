@@ -4,11 +4,11 @@ import { Feather } from "@expo/vector-icons";
 import { View } from "@ant-design/react-native";
 
 import { theme } from "@/styles/theme";
-import { HeaderRightProps } from "@/types/header";
-import useEvents from "@/hooks/useEvents";
+import { NativeStackHeaderRightProps } from "@/types/header";
+import useFetuses from "@/hooks/useFetuses";
 
-const CalendarHeaderRight = (props: HeaderRightProps) => {
-  const { handleModalOpen } = useEvents();
+const FetusAddHeaderRight = (props: NativeStackHeaderRightProps) => {
+  const { handleModalOpen } = useFetuses();
   return (
     <View style={styles.headerRight}>
       <TouchableOpacity style={styles.iconButton} onPress={handleModalOpen}>
@@ -21,12 +21,10 @@ const CalendarHeaderRight = (props: HeaderRightProps) => {
 const styles = StyleSheet.create({
   headerRight: {
     flexDirection: "row",
-    marginBottom: 10,
-    marginRight: 16,
   },
   iconButton: {
     marginLeft: 16,
   },
 });
 
-export default CalendarHeaderRight;
+export default FetusAddHeaderRight;

@@ -9,23 +9,15 @@ import { SplashScreen } from "expo-router";
 
 import { useStorageState } from "../hooks/useStorageState";
 import { customAxios } from "@/api/core";
-import { FetusGender, UserRoles } from "@/types/user";
-import { calculatePregnancyWeek } from "@/utils/core";
+import { UserRoles } from "@/types/user";
 import { ApiResponse } from "@/types/core";
-
-export type Fetus = {
-  id: string;
-  name: string;
-  dueDate: number;
-  gender: FetusGender;
-  weeks: number;
-};
+import { Fetus } from "./fetuses.context";
 
 type User = {
   email: string;
   role: UserRoles;
   avatarUrl: string | null;
-  fetuses: Fetus[];
+  fetuses: Omit<Fetus, "weeks">[];
 };
 
 type AuthStatus = {
@@ -35,8 +27,7 @@ type AuthStatus = {
 
 type AuthContextType = {
   user: User | null;
-  currentFetus: Fetus | null;
-  switchFetus: (fetus: Fetus) => void;
+  isFetchingUser: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -46,8 +37,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  currentFetus: null,
-  switchFetus: () => {},
+  isFetchingUser: false,
   signIn: () => Promise.resolve(),
   signUp: () => Promise.resolve(),
   signOut: () => Promise.resolve(),
@@ -61,8 +51,8 @@ const AuthContext = createContext<AuthContextType>({
 const SessionProvider = ({ children }: PropsWithChildren) => {
   const [[isLoading, session], setSession] = useStorageState("session");
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+  const [isFetchingUser, setIsFetchingUser] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [currentFetus, setCurrentFetus] = useState<Fetus | null>(null);
 
   const signUp = useCallback(async (email: string, password: string) => {
     try {
@@ -94,31 +84,20 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
     }
   }, []);
 
-  const switchFetus = (fetus: Fetus) => {
-    setCurrentFetus(fetus);
-  };
-
   useEffect(() => {
     const fetchUser = async () => {
+      setIsFetchingUser(true);
       try {
         const result = await customAxios.get<ApiResponse<User | null>>(
           "/users/self"
         );
 
-        // caclulate pregnancy weeks
-        let user = result.data.data;
-        if (user?.fetuses.length) {
-          user.fetuses = user.fetuses.map((fetus) => {
-            const weeks = calculatePregnancyWeek(fetus.dueDate, new Date());
-            return { ...fetus, weeks };
-          });
-          setCurrentFetus(user.fetuses[0]);
-        }
-
-        setUser(user);
+        setUser(result.data.data);
       } catch (error) {
         console.error("Failed to fetch user:", error);
         setUser(null);
+      } finally {
+        setIsFetchingUser(false);
       }
     };
 
@@ -147,8 +126,7 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
     <AuthContext.Provider
       value={{
         user,
-        currentFetus,
-        switchFetus,
+        isFetchingUser,
         signIn,
         signUp,
         signOut,
