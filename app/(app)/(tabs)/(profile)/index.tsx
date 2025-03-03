@@ -36,7 +36,7 @@ const ProfileScreen = () => {
     {
       icon: <FontAwesome5 name="seedling" size={24} color={theme.primary} />,
       title: "My Fetus",
-      // onPress: () => router.push('/baby-center'),
+      onPress: () => router.push("/manage-fetus"),
     },
     // {
     //   icon: <Ionicons name='chatbubble-outline' size={24} color='#2AA1AF' />,

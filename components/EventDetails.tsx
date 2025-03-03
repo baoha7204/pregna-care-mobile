@@ -13,6 +13,7 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { CalendarEvent } from "@/types/events";
 import { symptoms } from "@/data/symptoms";
+import { commonStyles } from "@/styles/common";
 
 interface EventDetailsProps {
   event: CalendarEvent;
@@ -94,7 +95,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.deleteButton}
+            style={commonStyles.deleteButton}
             onPress={() => onDelete(event.id)}
           >
             <Feather name="trash-2" size={20} color="white" />
@@ -145,13 +146,4 @@ const styles = StyleSheet.create({
   symptomText: {
     fontSize: 14,
   },
-  deleteButton: {
-    backgroundColor: "#DC2626",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 30,
-    borderRadius: 12,
-    marginLeft: 5,
-  },
-})
-
+});

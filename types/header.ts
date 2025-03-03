@@ -4,3 +4,8 @@ export type HeaderRightProps = {
   pressOpacity?: number;
   canGoBack: boolean;
 };
+
+export type NativeStackHeaderRightProps = {
+  tintColor?: string;
+  canGoBack?: boolean;
+};

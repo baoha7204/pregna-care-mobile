@@ -1,29 +1,30 @@
+import React from "react";
 import { Redirect, Tabs } from "expo-router";
-import { Text } from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-import useSession from "@/hooks/useSession";
-import React from "react";
-import { theme } from "@/styles/theme";
-import CalendarHeaderRight from "@/components/Header/CalendarHeaderRight";
 import FetusManageHeader from "@/components/Header/FetusManageHeader";
+import CalendarHeaderRight from "@/components/Header/CalendarHeaderRight";
+import useSession from "@/hooks/useSession";
+import useFetuses from "@/hooks/useFetuses";
+import { theme } from "@/styles/theme";
+import LoadingView from "@/components/LoadingView";
 
 const TabsLayout = () => {
   const {
     status: { authenticated },
     isLoading,
+    isFetchingUser,
     user,
-    currentFetus,
-    switchFetus,
   } = useSession();
+  const { fetuses, currentFetus, switchFetus } = useFetuses();
 
-  if (isLoading) {
-    return <Text>Loading....</Text>;
+  if (isLoading || isFetchingUser) {
+    return <LoadingView />;
   }
 
-  if (!authenticated) {
+  if (!authenticated || !user) {
     return <Redirect href="/sign-in" />;
   }
 
@@ -55,7 +56,7 @@ const TabsLayout = () => {
           headerTitle: () => null,
           header: (props) => (
             <FetusManageHeader
-              fetuses={user?.fetuses}
+              fetuses={fetuses}
               currentFetus={currentFetus}
               onSelectedFetus={switchFetus}
               {...props}

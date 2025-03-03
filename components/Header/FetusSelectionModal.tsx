@@ -11,8 +11,9 @@ import { View } from "@ant-design/react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 
-import { Fetus } from "@/contexts/auth.context";
 import { theme } from "@/styles/theme";
+import { Fetus } from "@/contexts/fetuses.context";
+import { useRouter } from "expo-router";
 
 type FetusSelectionModalProps = {
   visible: boolean;
@@ -29,6 +30,8 @@ const FetusSelectionModal = ({
   fetuses,
   currentFetus,
 }: FetusSelectionModalProps) => {
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.modalContainer}>
       <Modal animationType="fade" transparent={true} visible={visible}>
@@ -70,7 +73,15 @@ const FetusSelectionModal = ({
                 </TouchableOpacity>
               ))}
 
-              <TouchableOpacity style={styles.addBabyButton}>
+              <TouchableOpacity
+                style={styles.addBabyButton}
+                onPress={() => {
+                  router.push("/(app)/(tabs)/(profile)/manage-fetus", {
+                    withAnchor: true,
+                  });
+                  onClose();
+                }}
+              >
                 <FontAwesome name="plus" size={20} color={theme.primary} />
                 <Text style={styles.addBabyText}>Update family info</Text>
               </TouchableOpacity>

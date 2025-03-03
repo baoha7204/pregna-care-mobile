@@ -1,4 +1,4 @@
-import { subDays } from "date-fns";
+import { format, subDays } from "date-fns";
 
 export const calculateLmpDate = (dueDateUnknown: number | Date) => {
   let dueDate: Date;
@@ -21,3 +21,6 @@ export const calculatePregnancyWeek = (
 
   return weeks;
 };
+
+export const formatDateFromSeconds = (date: number) =>
+  format(new Date(date * 1000), "MM/dd/yyyy HH:mm:ss");
