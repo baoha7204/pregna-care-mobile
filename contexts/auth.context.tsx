@@ -5,7 +5,7 @@ import React, {
   useState,
   type PropsWithChildren,
 } from "react";
-import { SplashScreen } from "expo-router";
+import { router, SplashScreen } from "expo-router";
 
 import { useStorageState } from "../hooks/useStorageState";
 import { customAxios } from "@/api/core";
