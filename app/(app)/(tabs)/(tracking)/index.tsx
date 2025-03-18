@@ -100,20 +100,6 @@ export default function TrackingScreen() {
                     Track weight, length, and head size
                   </Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity style={styles.trackingCard}>
-                  <View style={styles.trackingIconContainer}>
-                    <FontAwesome5
-                      name="heartbeat"
-                      size={24}
-                      color={theme.primary}
-                    />
-                  </View>
-                  <Text style={styles.trackingCardTitle}>Kicks Counter</Text>
-                  <Text style={styles.trackingCardDesc}>
-                    Monitor baby's movements
-                  </Text>
-                </TouchableOpacity>
               </View>
             </>
           ) : (
