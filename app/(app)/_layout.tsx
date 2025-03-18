@@ -20,6 +20,13 @@ export default function RootLayout() {
           title: "Sign up",
         }}
       />
+      <Stack.Screen
+        name="otp-verification"
+        options={{
+          headerShown: false,
+          title: "OTP Verification",
+        }}
+      />
       <Stack.Screen name="+not-found" />
     </Stack>
   );

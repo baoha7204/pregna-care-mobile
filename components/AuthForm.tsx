@@ -1,4 +1,4 @@
-import { Link, useRouter } from "expo-router";
+import { Link } from "expo-router";
 import { FC, useRef, useState } from "react";
 import {
   Animated,
@@ -26,7 +26,6 @@ type AuthFormPropsType = {
 };
 
 const AuthForm: FC<AuthFormPropsType> = ({ mode, onSubmit }) => {
-  const router = useRouter();
   const [auth, setAuth] = useState<AuthFormType>({
     email: "",
     password: "",
@@ -51,10 +50,17 @@ const AuthForm: FC<AuthFormPropsType> = ({ mode, onSubmit }) => {
     }).start();
 
     try {
+      // Pass the credentials to the parent component to handle the authentication logic
       await onSubmit(auth.email, auth.password);
-      router.push(mode === "sign-in" ? "/(app)/(tabs)/(home)" : "/sign-in");
+      // No need to navigate here - the parent component will handle it
     } catch (error) {
       console.error("Authentication error:", error);
+      // Reset animation if there's an error
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
     } finally {
       setLoading(false);
     }

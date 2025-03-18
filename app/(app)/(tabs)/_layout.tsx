@@ -1,5 +1,5 @@
-import React from "react";
-import { Redirect, Tabs } from "expo-router";
+import React, { useEffect } from "react";
+import { Redirect, Tabs, router } from "expo-router";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -16,15 +16,22 @@ const TabsLayout = () => {
     status: { authenticated },
     isLoading,
     isFetchingUser,
-    user,
   } = useSession();
   const { fetuses, currentFetus, switchFetus } = useFetuses();
+
+  // Add an effect to ensure we redirect if authentication state changes
+  useEffect(() => {
+    if (!isLoading && !isFetchingUser && !authenticated) {
+      router.replace("/sign-in");
+    }
+  }, [authenticated, isLoading, isFetchingUser]);
 
   if (isLoading || isFetchingUser) {
     return <LoadingView />;
   }
 
-  if (!authenticated || !user) {
+  // If not authenticated, redirect to sign-in
+  if (!authenticated) {
     return <Redirect href="/sign-in" />;
   }
 
