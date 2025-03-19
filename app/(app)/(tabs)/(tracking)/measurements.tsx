@@ -76,6 +76,19 @@ export default function MeasurementsScreen() {
     }
   }, [currentFetus]);
 
+  // Cập nhật lại hàm hasDataForWeek để debug và đảm bảo hoạt động đúng
+  const hasDataForWeek = (week: number): boolean => {
+    if (!growthMetricHistory || !Array.isArray(growthMetricHistory)) {
+      return false;
+    }
+
+    const hasData = growthMetricHistory.some(
+      (weekData) => weekData.week === week
+    );
+
+    return hasData;
+  };
+
   // Sửa lại hàm loadGrowthMetricHistory
   const loadGrowthMetricHistory = async () => {
     if (!currentFetus?.id) return;
@@ -131,11 +144,6 @@ export default function MeasurementsScreen() {
                 (item) => item.name === standardItem.name
               );
 
-              console.log(
-                `For ${standardItem.name}, found existing value:`,
-                existingMeasurement?.value
-              );
-
               return {
                 ...standardItem,
                 value: existingMeasurement
@@ -175,7 +183,7 @@ export default function MeasurementsScreen() {
     setMeasurementTypes(updatedMeasurements);
   };
 
-  // Save measurements
+  // Cải thiện hàm handleSave để đảm bảo dữ liệu được tải lại đúng cách
   const handleSave = async () => {
     if (!selectedWeek || !currentFetus || !currentFetus.id) {
       console.error("Missing required data (week or fetus id)");
@@ -207,12 +215,27 @@ export default function MeasurementsScreen() {
       );
 
       if (response.data && response.data.success) {
-        // Reload growth metric history
-        await loadGrowthMetricHistory();
-        // Clear the form after successful save
-        setMeasurementTypes(
-          measurementTypes.map((item) => ({ ...item, value: "" }))
-        );
+        // Đóng modal trước để người dùng không phải đợi
+        handleCloseModal();
+
+        try {
+          // Load history sau đó
+          await loadGrowthMetricHistory();
+
+          // Thêm timeout để đảm bảo state đã được cập nhật
+          setTimeout(() => {
+            // Đảm bảo có editMode = true
+            setEditMode(true);
+
+            // Cập nhật measurementTypes với dữ liệu hiện tại
+            const savedMappedData = measurementTypes.map((item) => ({
+              ...item,
+            }));
+            setMeasurementTypes(savedMappedData);
+          }, 100);
+        } catch (error) {
+          console.error("Error loading growth metric history:", error);
+        }
       } else {
         console.error("Error saving measurements:", response.data);
       }
@@ -225,38 +248,8 @@ export default function MeasurementsScreen() {
 
   // Add this at the component level
   const formRef = React.useRef<View>(null);
-
-  // Update handleHistoryWeekClick to include scrolling functionality
-  const handleHistoryWeekClick = (week: number) => {
-    // Set the selected week and trigger the same data loading process
-    handleWeekSelect(week);
-
-    // Add a slight delay to ensure the form is rendered before attempting to scroll
-    setTimeout(() => {
-      // Scroll to form section
-      if (formRef.current && scrollViewRef.current) {
-        formRef.current.measureLayout(
-          // @ts-ignore - measureLayout has the correct parameters despite TypeScript warnings
-          scrollViewRef.current.getInnerViewNode(),
-          (_, y) => {
-            scrollViewRef.current?.scrollTo({ y: y - 20, animated: true });
-          },
-          () => console.error("Failed to measure layout")
-        );
-      }
-    }, 300);
-  };
-
   // Add scrollViewRef
   const scrollViewRef = React.useRef<ScrollView>(null);
-
-  // Cập nhật hàm hasDataForWeek
-  const hasDataForWeek = (week: number): boolean => {
-    if (!growthMetricHistory || !Array.isArray(growthMetricHistory)) {
-      return false;
-    }
-    return growthMetricHistory.some((weekData) => weekData.week === week);
-  };
 
   // Add these functions to handle opening and closing the modal
   const handleOpenModal = () => {
@@ -267,107 +260,59 @@ export default function MeasurementsScreen() {
     setModalVisible(false);
   };
 
-  // Add a function to view measurements details
-  const handleViewMeasurements = (week: number) => {
-    handleWeekSelect(week);
-    // Don't open the modal here, just show the data
-  };
-
-  // Sửa renderHistoryItem để phù hợp với cấu trúc dữ liệu mới
-  const renderHistoryItem = (weekData: GrowthMetricHistory) => (
-    <TouchableOpacity
-      key={weekData.week}
-      style={styles.historyItem}
-      onPress={() => handleViewMeasurements(weekData.week)}
-    >
-      <View style={styles.historyHeader}>
-        <Text style={styles.historyWeek}>Week {weekData.week}</Text>
-        <Feather name="chevron-right" size={18} color={theme.secondaryLight} />
-      </View>
-      {weekData.data.map((measurement, index) => (
-        <Text key={index} style={styles.historyMeasurement}>
-          {measurement.name}: {measurement.value} {measurement.unit}
-        </Text>
-      ))}
-    </TouchableOpacity>
-  );
-
-  // Add this function to handle updates of existing measurements
-  const handleUpdate = async () => {
-    if (!selectedWeek || !currentFetus || !currentFetus.id) {
-      console.error("Missing required data for update (week or fetus id)");
-      return;
-    }
-
-    // Make sure growthMetricHistory is an array before trying to find in it
-    if (!Array.isArray(growthMetricHistory)) {
-      console.error("Growth metric history is not an array");
-      return;
-    }
-
-    const existingRecord = growthMetricHistory.find(
-      (item) => item.week === selectedWeek
-    );
-
-    if (!existingRecord) {
-      console.error("Could not find existing record for week", selectedWeek);
-      // If record doesn't exist, use handleSave instead
-      handleSave();
-      handleCloseModal();
-      return;
-    }
-
-    if (!existingRecord._id) {
-      console.error("Found record but missing _id for week", selectedWeek);
-      // If _id is missing, use handleSave instead
-      handleSave();
-      handleCloseModal();
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      // Format data according to the required payload format
-      const formattedData = measurementTypes
-        .filter((item) => item.value && item.value.trim() !== "")
-        .map((item) => ({
-          name: item.name,
-          unit: item.unit,
-          value: parseFloat(item.value || "0"),
-        }));
-
-      // Format the complete payload
-      const payload = {
-        week: selectedWeek,
-        data: formattedData,
-      };
-
-      console.log(
-        `Updating record ${existingRecord._id} with payload:`,
-        payload
+  // Thêm effect này vào component
+  useEffect(() => {
+    if (
+      selectedWeek &&
+      growthMetricHistory &&
+      Array.isArray(growthMetricHistory)
+    ) {
+      const existingData = growthMetricHistory.find(
+        (item) => item.week === selectedWeek
       );
 
-      // Make the API call using PATCH
-      const response = await customAxios.patch(
-        `/growth-metric/${existingRecord._id}`,
-        payload
-      );
-
-      if (response.data && response.data.success) {
-        console.log("Successfully updated measurements");
-        // Reload growth metric history
-        await loadGrowthMetricHistory();
-      } else {
-        console.error("Error updating measurements:", response.data);
+      if (existingData && existingData.data && existingData.data.length > 0) {
+        setEditMode(true);
       }
-    } catch (error) {
-      console.error("Error updating measurements:", error);
-    } finally {
-      setLoading(false);
-      handleCloseModal();
     }
-  };
+  }, [growthMetricHistory, selectedWeek]);
+
+  // Tối ưu hóa renderItem cho FlatList
+  const renderWeekItem = React.useCallback(
+    ({ item }: { item: number }) => {
+      const hasData = hasDataForWeek(item);
+      const isFutureWeek = item > currentPregnancyWeek;
+
+      return (
+        <TouchableOpacity
+          style={[
+            styles.weekItem,
+            selectedWeek === item && styles.selectedWeekItem,
+            hasData && styles.weekItemWithData,
+            isFutureWeek && styles.disabledWeekItem,
+          ]}
+          onPress={() => {
+            if (!isFutureWeek) {
+              handleWeekSelect(item);
+            }
+          }}
+          disabled={isFutureWeek}
+        >
+          <Text
+            style={[
+              styles.weekText,
+              selectedWeek === item && styles.selectedWeekText,
+              isFutureWeek && styles.disabledWeekText,
+            ]}
+          >
+            {item}
+          </Text>
+          {hasData && <View style={styles.weekDataIndicator} />}
+        </TouchableOpacity>
+      );
+    },
+    [selectedWeek, growthMetricHistory, currentPregnancyWeek]
+  );
 
   if (!currentFetus) {
     return (
@@ -398,40 +343,19 @@ export default function MeasurementsScreen() {
               data={weeks}
               horizontal
               showsHorizontalScrollIndicator={true}
-              renderItem={({ item }) => {
-                const hasData = hasDataForWeek(item);
-                const isFutureWeek = item > currentPregnancyWeek;
-
-                return (
-                  <TouchableOpacity
-                    style={[
-                      styles.weekItem,
-                      selectedWeek === item && styles.selectedWeekItem,
-                      hasData && styles.weekItemWithData,
-                      isFutureWeek && styles.disabledWeekItem,
-                    ]}
-                    onPress={() => {
-                      if (!isFutureWeek) {
-                        handleWeekSelect(item);
-                      }
-                    }}
-                    disabled={isFutureWeek}
-                  >
-                    <Text
-                      style={[
-                        styles.weekText,
-                        selectedWeek === item && styles.selectedWeekText,
-                        isFutureWeek && styles.disabledWeekText,
-                      ]}
-                    >
-                      {item}
-                    </Text>
-                    {hasData && <View style={styles.weekDataIndicator} />}
-                  </TouchableOpacity>
-                );
-              }}
+              renderItem={renderWeekItem}
               keyExtractor={(item) => item.toString()}
               contentContainerStyle={styles.weekList}
+              // Thêm các props sau để tối ưu hiệu suất
+              removeClippedSubviews={true}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={5}
+              getItemLayout={(data, index) => ({
+                length: 52, // width + marginHorizontal * 2
+                offset: 52 * index,
+                index,
+              })}
             />
           </View>
 
@@ -468,7 +392,13 @@ export default function MeasurementsScreen() {
                 )}
               </View>
 
-              {selectedWeek && measurementTypes.length > 0 && editMode ? (
+              {/* Kiểm tra dữ liệu hiển thị */}
+              {selectedWeek &&
+              measurementTypes.length > 0 &&
+              (editMode ||
+                measurementTypes.some(
+                  (m) => m.value && m.value.trim() !== ""
+                )) ? (
                 <View style={styles.measurementsList}>
                   {measurementTypes
                     .filter((item) => item.value && item.value.trim() !== "")
@@ -490,7 +420,7 @@ export default function MeasurementsScreen() {
                     </Text>
                   )}
                 </View>
-              ) : selectedWeek && !editMode ? (
+              ) : selectedWeek ? (
                 <View style={styles.noMeasurementsContainer}>
                   <Feather
                     name="file-text"
@@ -511,38 +441,6 @@ export default function MeasurementsScreen() {
               )}
             </View>
           )}
-
-          {/* Measurement History Section
-          <View style={styles.historySection}>
-            <Text style={styles.sectionTitle}>Measurement History</Text>
-
-            {historyLoading ? (
-              <ActivityIndicator
-                size="large"
-                color={theme.secondary}
-                style={styles.historyLoading}
-              />
-            ) : growthMetricHistory &&
-              Array.isArray(growthMetricHistory) &&
-              growthMetricHistory.length > 0 ? (
-              <View style={styles.historyList}>
-                {growthMetricHistory
-                  .sort((a, b) => b.week - a.week) // Sort by week descending (newest first)
-                  .map((weekData) => renderHistoryItem(weekData))}
-              </View>
-            ) : (
-              <View style={styles.historyEmpty}>
-                <Feather
-                  name="bar-chart-2"
-                  size={48}
-                  color={theme.primaryDark}
-                />
-                <Text style={styles.historyEmptyText}>
-                  No measurements recorded yet
-                </Text>
-              </View>
-            )}
-          </View> */}
         </View>
       </ScrollView>
 
@@ -594,13 +492,9 @@ export default function MeasurementsScreen() {
 
               <TouchableOpacity
                 style={styles.saveButton}
-                onPress={() => {
-                  if (editMode) {
-                    handleUpdate();
-                  } else {
-                    handleSave();
-                    handleCloseModal();
-                  }
+                onPress={async () => {
+                  handleSave();
+                  // handleCloseModal được gọi trong handleSave
                 }}
               >
                 <Text style={styles.saveButtonText}>Save</Text>
@@ -890,7 +784,8 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   cancelButton: {
-    paddingVertical: 10,
+    marginTop: 8,
+    paddingVertical: 14,
     paddingHorizontal: 14,
     marginRight: 12,
     borderRadius: 8,
@@ -900,6 +795,7 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     fontSize: 16,
     color: theme.secondaryLight,
+    fontWeight: "600",
   },
   disabledWeekItem: {
     backgroundColor: theme.primaryLight,
