@@ -4,10 +4,8 @@ import { Redirect, Tabs, router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-import FetusManageHeader from "@/components/Header/FetusManageHeader";
 import CalendarHeaderRight from "@/components/Header/CalendarHeaderRight";
 import useSession from "@/hooks/useSession";
-import useFetuses from "@/hooks/useFetuses";
 import { theme } from "@/styles/theme";
 import LoadingView from "@/components/LoadingView";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -18,7 +16,6 @@ const TabsLayout = () => {
     isLoading,
     isFetchingUser,
   } = useSession();
-  const { fetuses, currentFetus, switchFetus } = useFetuses();
 
   // Add an effect to ensure we redirect if authentication state changes
   useEffect(() => {
@@ -51,7 +48,7 @@ const TabsLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="(home)/index"
+        name="(home)"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
@@ -61,15 +58,7 @@ const TabsLayout = () => {
             />
           ),
           tabBarLabel: "Home",
-          headerTitle: () => null,
-          header: (props) => (
-            <FetusManageHeader
-              fetuses={fetuses}
-              currentFetus={currentFetus}
-              onSelectedFetus={switchFetus}
-              {...props}
-            />
-          ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen

@@ -38,7 +38,7 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<boolean>;
   signUp: (email: string, password: string) => Promise<OTPResponseData | null>;
   verifyOtp: (userId: string, otp: string) => Promise<void>;
-  resendOtp: (userId: string) => Promise<void>;
+  resendOtp: (userId: string, email: string) => Promise<void>;
   signOut: () => Promise<void>;
   status: AuthStatus;
   isLoading: boolean;
@@ -47,7 +47,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isFetchingUser: false,
-  signIn: () => Promise.resolve(),
+  signIn: () => Promise.resolve(false),
   signUp: () => Promise.resolve(null),
   verifyOtp: () => Promise.resolve(),
   resendOtp: () => Promise.resolve(),
@@ -99,11 +99,9 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
     }
   }, []);
 
-  const resendOtp = useCallback(async (userId: string) => {
+  const resendOtp = useCallback(async (userId: string, email: string) => {
     try {
-      console.log("Resending OTP for user:", userId);
-      // In a real implementation, you would call an API endpoint to resend the OTP
-      // await customAxios.post("/auth/resend-otp", { userId });
+      await customAxios.post("/auth/resend-otp", { userId, email });
     } catch (error) {
       console.error("Failed to resend OTP:", error);
     }

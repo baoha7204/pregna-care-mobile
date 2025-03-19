@@ -4,10 +4,10 @@ import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import FetusSelectionModal from "./FetusSelectionModal";
 import { theme } from "@/styles/theme";
-import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
 import { Fetus } from "@/contexts/fetuses.context";
+import { NativeStackHeaderRightProps } from "@/types/header";
 
-type FetusManageHeaderProps = BottomTabHeaderProps & {
+type FetusManageHeaderProps = NativeStackHeaderRightProps & {
   fetuses?: Fetus[];
   currentFetus: Fetus | null;
   onSelectedFetus: (fetus: Fetus) => void;
@@ -15,7 +15,7 @@ type FetusManageHeaderProps = BottomTabHeaderProps & {
 
 const FetusManageHeader = (props: FetusManageHeaderProps) => {
   const { fetuses, currentFetus, onSelectedFetus } = props;
-  const styles = useStyles(props);
+  const styles = useStyles();
   const [modalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -63,7 +63,7 @@ const FetusManageHeader = (props: FetusManageHeaderProps) => {
   );
 };
 
-const useStyles = (props: BottomTabHeaderProps) =>
+const useStyles = () =>
   StyleSheet.create({
     headerLeft: {
       flexDirection: "row",

@@ -19,6 +19,7 @@ import useSession from "@/hooks/useSession";
 import LoadingView from "@/components/LoadingView";
 
 const OTP_TIMEOUT = 10 * 60; // 10 minutes in seconds
+const RESEND_COOLDOWN = 10; // 10 seconds cooldown for resend button
 
 const OtpVerificationScreen = () => {
   const { userId, email } = useLocalSearchParams();
@@ -27,13 +28,18 @@ const OtpVerificationScreen = () => {
 
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [timeLeft, setTimeLeft] = useState(OTP_TIMEOUT);
+  const [resendCooldown, setResendCooldown] = useState(RESEND_COOLDOWN);
+  const [resendCount, setResendCount] = useState(0);
+  const [resendLimit, setResendLimit] = useState(5);
   const [loading, setLoading] = useState(false);
+  const [isResendActive, setIsResendActive] = useState(false);
 
   const inputRefs = useRef<(TextInput | null)[]>(Array(6).fill(null));
 
   // Check if the OTP is complete (all 6 digits entered)
   const isOtpComplete = otp.every((digit) => digit !== "");
 
+  // Timer for OTP expiration
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -47,6 +53,28 @@ const OtpVerificationScreen = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  // Timer for resend cooldown
+  useEffect(() => {
+    if (resendCooldown <= 0) {
+      setIsResendActive(true);
+      return;
+    }
+
+    setIsResendActive(false);
+    const cooldownTimer = setInterval(() => {
+      setResendCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(cooldownTimer);
+          setIsResendActive(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(cooldownTimer);
+  }, [resendCooldown]);
 
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
@@ -118,12 +146,19 @@ const OtpVerificationScreen = () => {
   };
 
   const handleResendOtp = () => {
-    if (timeLeft === 0) {
-      resendOtp(userId as string);
+    if (resendCount < resendLimit) {
+      resendOtp(userId as string, email as string);
       setTimeLeft(OTP_TIMEOUT);
+      setResendCooldown(RESEND_COOLDOWN);
+      setResendCount(resendCount + 1);
       Alert.alert(
         "OTP Sent",
         "A new verification code has been sent to your email."
+      );
+    } else if (resendCount >= resendLimit) {
+      Alert.alert(
+        "Resend Limit Reached",
+        "You have reached the maximum number of resend attempts. Please try again later."
       );
     }
   };
@@ -182,12 +217,12 @@ const OtpVerificationScreen = () => {
 
           <TouchableOpacity
             onPress={handleResendOtp}
-            disabled={timeLeft > 0}
-            style={timeLeft === 0 ? styles.resendActive : styles.resendInactive}
+            disabled={!isResendActive}
+            style={isResendActive ? styles.resendActive : styles.resendInactive}
           >
             <Text
               style={
-                timeLeft === 0
+                isResendActive
                   ? styles.resendTextActive
                   : styles.resendTextInactive
               }
