@@ -13,6 +13,7 @@ import { Feather, FontAwesome5 } from "@expo/vector-icons";
 import useFetuses from "@/hooks/useFetuses";
 import { theme } from "@/styles/theme";
 import FetusSelectionModal from "@/components/Header/FetusSelectionModal";
+import RadarGrowthChart from "@/components/Chart/RadarGrowthChart";
 
 export default function TrackingScreen() {
   const router = useRouter();
@@ -77,6 +78,8 @@ export default function TrackingScreen() {
                   <Text style={styles.metricLabel}>Trimester</Text>
                 </View>
               </View>
+              
+
 
               <Text style={styles.sectionTitle}>Tracking Tools</Text>
               <View style={styles.trackingOptions}>
@@ -103,9 +106,15 @@ export default function TrackingScreen() {
               </View>
             </>
           ) : (
+            <>
             <Text style={styles.noFetusText}>
               Please select or add a baby to start tracking
             </Text>
+                <View style={styles.chartContainer}>
+                  <RadarGrowthChart />
+                </View>
+            </>
+              
           )}
         </View>
         <FetusSelectionModal
@@ -245,5 +254,9 @@ const styles = StyleSheet.create({
     color: theme.secondaryLight,
     textAlign: "center",
     marginTop: 40,
+  },
+  chartContainer: {
+    marginVertical: 20,
+    width: '100%',
   },
 });

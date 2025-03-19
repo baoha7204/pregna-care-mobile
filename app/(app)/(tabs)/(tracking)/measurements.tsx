@@ -15,6 +15,7 @@ import { Feather } from "@expo/vector-icons";
 import { theme } from "@/styles/theme";
 import useFetuses from "@/hooks/useFetuses";
 import { customAxios } from "@/api/core";
+import RadarGrowthChart from "@/components/Chart/RadarGrowthChart";
 
 // Define types for the data structures
 interface MeasurementType {
@@ -370,11 +371,14 @@ export default function MeasurementsScreen() {
 
   if (!currentFetus) {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.noFetusText}>
-          Please select a baby to track measurements
-        </Text>
-      </SafeAreaView>
+      // <SafeAreaView style={styles.container}>
+      //   <Text style={styles.noFetusText}>
+      //     Please select a baby to track measurements
+      //   </Text>
+      // </SafeAreaView>
+      <View style={styles.chartContainer}>
+        <RadarGrowthChart />
+      </View>
     );
   }
 
@@ -903,5 +907,9 @@ const styles = StyleSheet.create({
   },
   disabledWeekText: {
     color: theme.secondaryLight,
+  },
+  chartContainer: {
+    marginVertical: 20,
+    width: '100%',
   },
 });
