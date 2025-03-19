@@ -10,6 +10,7 @@ import useSession from "@/hooks/useSession";
 import useFetuses from "@/hooks/useFetuses";
 import { theme } from "@/styles/theme";
 import LoadingView from "@/components/LoadingView";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 const TabsLayout = () => {
   const {
@@ -84,6 +85,20 @@ const TabsLayout = () => {
           tabBarLabel: "Calendar",
           title: "My Calendar",
           headerRight: CalendarHeaderRight,
+        }}
+      />
+      <Tabs.Screen
+        name="(tracking)"
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome6
+              name={focused ? "chart-simple" : "chart-simple"}
+              size={24}
+              color={color}
+            />
+          ),
+          tabBarLabel: "Tracking",
+          headerShown: false,
         }}
       />
       <Tabs.Screen
