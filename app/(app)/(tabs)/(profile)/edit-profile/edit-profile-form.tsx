@@ -181,7 +181,13 @@ const UpdateProfileForm: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.avatarContainer}>
+        <Text style={styles.sectionTitle}>Profile Photo</Text>
+        <Text style={styles.fieldDescription}>
+          Tap on the photo to change your profile picture
+        </Text>
+
         <TouchableOpacity
+          style={styles.avatarWrapper}
           onPress={pickImage}
           disabled={isSubmitting || isUploading}
         >
@@ -205,65 +211,101 @@ const UpdateProfileForm: React.FC = () => {
       </View>
 
       <View style={styles.formContainer}>
-        <Text style={styles.label}>First Name</Text>
-        <TextInput
-          style={styles.input}
-          value={formData.firstName}
-          onChangeText={(value) => handleChange('firstName', value)}
-          placeholder='Enter your first name'
-          editable={!isSubmitting}
-        />
+        <Text style={styles.sectionTitle}>Personal Information</Text>
 
-        <Text style={styles.label}>Last Name</Text>
-        <TextInput
-          style={styles.input}
-          value={formData.lastName}
-          onChangeText={(value) => handleChange('lastName', value)}
-          placeholder='Enter your last name'
-          editable={!isSubmitting}
-        />
-
-        <Text style={styles.label}>Phone Number</Text>
-        <TextInput
-          style={styles.input}
-          value={formData.phoneNumber}
-          onChangeText={(value) => handleChange('phoneNumber', value)}
-          placeholder='Enter your phone number'
-          keyboardType='phone-pad'
-          editable={!isSubmitting}
-        />
-
-        <Text style={styles.label}>Nationality</Text>
-        <TextInput
-          style={styles.input}
-          value={formData.nationality}
-          onChangeText={(value) => handleChange('nationality', value)}
-          placeholder='Enter your nationality'
-          editable={!isSubmitting}
-        />
-
-        <Text style={styles.label}>Blood Type</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={formData.bloodType}
-            onValueChange={(value) => handleChange('bloodType', value)}
-            style={styles.picker}
-            enabled={!isSubmitting}
-          >
-            {bloodTypes.map((type) => (
-              <Picker.Item key={type} label={type} value={type} />
-            ))}
-          </Picker>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>
+            First Name <Text style={styles.required}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            value={formData.firstName}
+            onChangeText={(value) => handleChange('firstName', value)}
+            placeholder='Enter your first name'
+            editable={!isSubmitting}
+          />
+          <Text style={styles.fieldDescription}>Your legal first name</Text>
         </View>
 
-        <Text style={styles.label}>Date of Birth</Text>
-        <TouchableOpacity
-          style={styles.datePickerButton}
-          onPress={() => setShowDatePicker(true)}
-          disabled={isSubmitting}
-        >
-          <Text>{formData.dateOfBirth.toLocaleDateString()}</Text>
-        </TouchableOpacity>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>
+            Last Name <Text style={styles.required}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            value={formData.lastName}
+            onChangeText={(value) => handleChange('lastName', value)}
+            placeholder='Enter your last name'
+            editable={!isSubmitting}
+          />
+          <Text style={styles.fieldDescription}>Your legal last name</Text>
+        </View>
+
+        <Text style={styles.sectionTitle}>Contact Information</Text>
+
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Phone Number</Text>
+          <TextInput
+            style={styles.input}
+            value={formData.phoneNumber}
+            onChangeText={(value) => handleChange('phoneNumber', value)}
+            placeholder='Enter your phone number'
+            keyboardType='phone-pad'
+            editable={!isSubmitting}
+          />
+          <Text style={styles.fieldDescription}>
+            Your contact number for notifications
+          </Text>
+        </View>
+
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Nationality</Text>
+          <TextInput
+            style={styles.input}
+            value={formData.nationality}
+            onChangeText={(value) => handleChange('nationality', value)}
+            placeholder='Enter your nationality'
+            editable={!isSubmitting}
+          />
+          <Text style={styles.fieldDescription}>
+            Your country of citizenship
+          </Text>
+        </View>
+
+        <Text style={styles.sectionTitle}>Medical Information</Text>
+
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Blood Type</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={formData.bloodType}
+              onValueChange={(value) => handleChange('bloodType', value)}
+              style={styles.picker}
+              enabled={!isSubmitting}
+            >
+              {bloodTypes.map((type) => (
+                <Picker.Item key={type} label={type} value={type} />
+              ))}
+            </Picker>
+          </View>
+          <Text style={styles.fieldDescription}>
+            Important for medical purposes
+          </Text>
+        </View>
+
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Date of Birth</Text>
+          <TouchableOpacity
+            style={styles.datePickerButton}
+            onPress={() => setShowDatePicker(true)}
+            disabled={isSubmitting}
+          >
+            <Text>{formData.dateOfBirth.toLocaleDateString()}</Text>
+          </TouchableOpacity>
+          <Text style={styles.fieldDescription}>
+            Your date of birth for age tracking
+          </Text>
+        </View>
 
         {showDatePicker && (
           <DateTimePicker
@@ -275,17 +317,19 @@ const UpdateProfileForm: React.FC = () => {
           />
         )}
 
-        <TouchableOpacity
-          style={[styles.button, isSubmitting && styles.disabledButton]}
-          onPress={handleSubmit}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <ActivityIndicator color='white' size='small' />
-          ) : (
-            <Text style={styles.buttonText}>Update Profile</Text>
-          )}
-        </TouchableOpacity>
+        <View style={styles.formActions}>
+          <TouchableOpacity
+            style={[styles.button, isSubmitting && styles.disabledButton]}
+            onPress={handleSubmit}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <ActivityIndicator color='white' size='small' />
+            ) : (
+              <Text style={styles.buttonText}>Update Profile</Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
@@ -296,10 +340,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: theme.textPrimary,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    paddingBottom: 8,
+  },
   avatarContainer: {
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 10,
+    padding: 20,
     position: 'relative',
+  },
+  avatarWrapper: {
+    position: 'relative',
+    marginTop: 10,
+    borderWidth: 3,
+    borderColor: '#f0f0f0',
+    borderRadius: 63, // 60 + 3 border
+    padding: 3,
   },
   avatar: {
     width: 120,
@@ -332,25 +394,37 @@ const styles = StyleSheet.create({
   formContainer: {
     padding: 20,
   },
+  formGroup: {
+    marginBottom: 20,
+  },
   label: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: theme.textPrimary,
+    color: '#333',
+  },
+  required: {
+    color: '#FF0000',
+  },
+  fieldDescription: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 4,
+    fontStyle: 'italic',
   },
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
     padding: 12,
     borderRadius: 5,
-    marginBottom: 15,
     fontSize: 16,
+    backgroundColor: '#fff',
   },
   pickerContainer: {
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 5,
-    marginBottom: 15,
+    backgroundColor: '#fff',
   },
   picker: {
     height: 50,
@@ -360,14 +434,16 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     padding: 12,
     borderRadius: 5,
-    marginBottom: 15,
+    backgroundColor: '#fff',
+  },
+  formActions: {
+    marginTop: 20,
   },
   button: {
     backgroundColor: theme.primary,
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
-    marginTop: 10,
   },
   disabledButton: {
     backgroundColor: '#cccccc',
