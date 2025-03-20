@@ -24,6 +24,7 @@ export default function ProfileLayout() {
         name="manage-fetus"
         options={{ title: "My Fetus", headerRight: FetusAddHeaderRight }}
       />
+      <Stack.Screen name="manage-plans" options={{ title: "My Plans" }} />
     </Stack>
   );
 }

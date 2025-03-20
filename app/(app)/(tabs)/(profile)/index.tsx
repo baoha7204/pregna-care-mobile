@@ -7,7 +7,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons, FontAwesome5, FontAwesome } from "@expo/vector-icons";
 
 import useSession from "@/hooks/useSession";
 import { theme } from "@/styles/theme";
@@ -37,6 +37,11 @@ const ProfileScreen = () => {
       icon: <FontAwesome5 name="seedling" size={24} color={theme.primary} />,
       title: "My Fetus",
       onPress: () => router.push("/manage-fetus"),
+    },
+    {
+      icon: <FontAwesome name="diamond" size={24} color={theme.primary} />,
+      title: "My Plans",
+      onPress: () => router.push("/manage-plans"),
     },
     // {
     //   icon: <Ionicons name='chatbubble-outline' size={24} color='#2AA1AF' />,

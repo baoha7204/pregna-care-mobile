@@ -2,22 +2,26 @@ import React, {
   createContext,
   useCallback,
   useEffect,
+  useMemo,
   useState,
   type PropsWithChildren,
 } from "react";
-import { router, SplashScreen } from "expo-router";
+import { SplashScreen } from "expo-router";
 
 import { useStorageState } from "../hooks/useStorageState";
 import { customAxios } from "@/api/core";
 import { UserRoles } from "@/types/user";
 import { ApiResponse } from "@/types/core";
 import { Fetus } from "./fetuses.context";
+import { MembershipPlanUser } from "@/types/membership-plan";
+import { checkValidPremium } from "@/utils/premium";
 
-type User = {
+export type User = {
   email: string;
   role: UserRoles;
   avatarUrl: string | null;
   fetuses: Omit<Fetus, "weeks">[];
+  membership: MembershipPlanUser;
 };
 
 type AuthStatus = {
@@ -34,6 +38,7 @@ type OTPResponseData = {
 
 type AuthContextType = {
   user: User | null;
+  isPremium: boolean;
   isFetchingUser: boolean;
   signIn: (email: string, password: string) => Promise<boolean>;
   signUp: (email: string, password: string) => Promise<OTPResponseData | null>;
@@ -46,6 +51,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  isPremium: false,
   isFetchingUser: false,
   signIn: () => Promise.resolve(false),
   signUp: () => Promise.resolve(null),
@@ -64,6 +70,7 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [isFetchingUser, setIsFetchingUser] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const isPremium = useMemo(() => checkValidPremium(user), [user]);
 
   const signUp = useCallback(async (email: string, password: string) => {
     try {
@@ -199,6 +206,7 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
     <AuthContext.Provider
       value={{
         user,
+        isPremium,
         isFetchingUser,
         signIn,
         signUp,

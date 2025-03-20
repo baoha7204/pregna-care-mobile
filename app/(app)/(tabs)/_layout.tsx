@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Redirect, Tabs, router } from "expo-router";
+import { Redirect, Tabs, useRouter } from "expo-router";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -9,13 +9,17 @@ import useSession from "@/hooks/useSession";
 import { theme } from "@/styles/theme";
 import LoadingView from "@/components/LoadingView";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { UserRoles } from "@/types/user";
 
 const TabsLayout = () => {
   const {
     status: { authenticated },
     isLoading,
     isFetchingUser,
+    user,
+    isPremium,
   } = useSession();
+  const router = useRouter();
 
   // Add an effect to ensure we redirect if authentication state changes
   useEffect(() => {
@@ -29,7 +33,7 @@ const TabsLayout = () => {
   }
 
   // If not authenticated, redirect to sign-in
-  if (!authenticated) {
+  if (!authenticated || user?.role === UserRoles.Admin) {
     return <Redirect href="/sign-in" />;
   }
 
@@ -64,6 +68,9 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="(calendar)/index"
         options={{
+          tabBarItemStyle: {
+            display: isPremium ? "flex" : "none",
+          },
           tabBarIcon: ({ color, focused }) => (
             <FontAwesome
               name={focused ? "calendar" : "calendar"}

@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useMemo } from "react";
+import { useRouter } from "expo-router";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import {
   View,
   Text,
@@ -31,8 +32,11 @@ import useEvents from "@/hooks/useEvents";
 import { calculatePregnancyWeek } from "@/utils/core";
 import { theme } from "@/styles/theme";
 import useFetuses from "@/hooks/useFetuses";
+import useSession from "@/hooks/useSession";
 
 const CalendarScreen = () => {
+  const router = useRouter();
+  const { isPremium } = useSession();
   const { currentFetus } = useFetuses();
   const {
     events,
@@ -198,6 +202,12 @@ const CalendarScreen = () => {
     () => getEventsForDate(selectedDate),
     [selectedDate, getEventsForDate]
   );
+
+  useEffect(() => {
+    if (!isPremium) {
+      router.replace("/(app)/(tabs)/(home)");
+    }
+  }, [isPremium]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
