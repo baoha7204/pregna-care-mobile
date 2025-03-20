@@ -5,24 +5,15 @@ import {
   StyleSheet,
   Image,
   ScrollView,
-  Linking,
   ActivityIndicator,
 } from "react-native";
-import { SvgCssUri } from "react-native-svg/css";
 import { format } from "date-fns";
 import { useLocalSearchParams } from "expo-router";
 
 import { customAxios } from "@/api/core";
 import { Card } from "@ant-design/react-native";
 import { theme } from "@/styles/theme";
-
-type ContentNode = {
-  type: string;
-  attrs?: any;
-  content?: ContentNode[];
-  text?: string;
-  marks?: { type: string; attrs?: any }[];
-};
+import { ContentNode, ContentRenderer } from "./ContentNodeRenderer";
 
 type BlogPost = {
   id: string;
@@ -69,105 +60,6 @@ const BlogDetail = () => {
     return format(date, "MMMM d, yyyy");
   };
 
-  const handleLinkPress = (url: string) => {
-    Linking.openURL(url);
-  };
-
-  const renderTextWithMarks = (
-    text: string,
-    marks: { type: string; attrs?: any }[] | undefined
-  ) => {
-    if (!marks || marks.length === 0) {
-      return <Text style={styles.normalText}>{text}</Text>;
-    }
-
-    let result = <Text style={styles.normalText}>{text}</Text>;
-
-    marks.forEach((mark) => {
-      switch (mark.type) {
-        case "bold":
-          result = <Text style={styles.boldText}>{text}</Text>;
-          break;
-        case "link":
-          result = (
-            <Text
-              style={styles.linkText}
-              onPress={() => handleLinkPress(mark.attrs?.href || "#")}
-            >
-              {text}
-            </Text>
-          );
-          break;
-        default:
-          break;
-      }
-    });
-
-    return result;
-  };
-
-  const renderContentNode = (
-    node: ContentNode,
-    index: number
-  ): React.ReactNode => {
-    switch (node.type) {
-      case "heading":
-        const level = node.attrs?.level || 1;
-        const headingStyle = [
-          styles.heading,
-          level === 1
-            ? styles.heading1
-            : level === 2
-            ? styles.heading2
-            : level === 3
-            ? styles.heading3
-            : styles.heading4,
-        ];
-        return (
-          <Text key={index} style={headingStyle}>
-            {node.content?.map((child, childIndex) =>
-              renderContentNode(child, childIndex)
-            )}
-          </Text>
-        );
-
-      case "paragraph":
-        return (
-          <Text key={index} style={styles.paragraph}>
-            {node.content?.map((child, childIndex) =>
-              renderContentNode(child, childIndex)
-            )}
-          </Text>
-        );
-
-      case "text":
-        return renderTextWithMarks(node.text || "", node.marks);
-
-      case "image":
-        const src = node.attrs?.src || "";
-        if (src.endsWith("svg")) {
-          return <SvgCssUri key={index} width="100" height="100" uri={src} />;
-        }
-        if (
-          src.endsWith("png") ||
-          src.endsWith("jpg") ||
-          src.endsWith("jpeg")
-        ) {
-          return (
-            <Image
-              key={index}
-              source={{ uri: src }}
-              style={styles.contentImage}
-              resizeMode="contain"
-            />
-          );
-        }
-
-      default:
-        return null;
-    }
-  };
-
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -205,8 +97,8 @@ const BlogDetail = () => {
         </View>
 
         <View style={styles.contentContainer}>
-          {blogData.content.content.map((node, index) =>
-            renderContentNode(node, index)
+          {blogData.content.content && (
+            <ContentRenderer content={blogData.content.content} />
           )}
         </View>
       </Card>

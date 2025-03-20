@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { Feather } from "@expo/vector-icons";
-import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 
 import FetusSelectionModal from "./FetusSelectionModal";
 import { theme } from "@/styles/theme";
@@ -15,7 +22,6 @@ type FetusManageHeaderProps = NativeStackHeaderRightProps & {
 
 const FetusManageHeader = (props: FetusManageHeaderProps) => {
   const { fetuses, currentFetus, onSelectedFetus } = props;
-  const styles = useStyles();
   const [modalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -63,42 +69,42 @@ const FetusManageHeader = (props: FetusManageHeaderProps) => {
   );
 };
 
-const useStyles = () =>
-  StyleSheet.create({
-    headerLeft: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      backgroundColor: theme.primary,
-      paddingBottom: 16,
-    },
-    button: {
-      flex: 1,
-    },
-    babyInfo: {
-      flex: 1,
-      gap: 10,
-      flexDirection: "row",
-      alignItems: "flex-end",
-      marginLeft: 16,
-    },
-    babyIcon: {
-      width: 36,
-      height: 36,
-      borderRadius: 18,
-      marginRight: 12,
-    },
-    babyName: {
-      color: theme.textPrimary,
-      fontSize: 18,
-      fontWeight: "600",
-    },
-    babyWeeks: {
-      color: "#333",
-      fontSize: 14,
-    },
-    dropDownIcon: {
-      marginBottom: 10,
-    },
-  });
+const styles = StyleSheet.create({
+  headerLeft: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: theme.primary,
+    paddingTop: Platform.OS === "android" ? 10 : 0,
+    paddingBottom: 16,
+  },
+  button: {
+    flex: 1,
+  },
+  babyInfo: {
+    flex: Platform.OS === "android" ? 0 : 1,
+    gap: 10,
+    flexDirection: "row",
+    alignItems: "flex-end",
+    marginLeft: 16,
+  },
+  babyIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    marginRight: 12,
+  },
+  babyName: {
+    color: theme.textPrimary,
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  babyWeeks: {
+    color: "#333",
+    fontSize: 14,
+  },
+  dropDownIcon: {
+    marginBottom: 10,
+  },
+});
 
 export default FetusManageHeader;

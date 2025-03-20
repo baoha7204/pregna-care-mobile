@@ -1,5 +1,11 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import {
   ActionSheet,
   ActivityIndicator,
@@ -9,6 +15,7 @@ import {
 import Feather from "@expo/vector-icons/Feather";
 import { TextInput } from "react-native-gesture-handler";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { format } from "date-fns";
 
 import { FetusGender } from "@/types/user";
 import { theme } from "@/styles/theme";
@@ -48,6 +55,7 @@ const FetusInputModal: FC<FetusInputModalProps> = ({
   const isEdit = useMemo(() => mode === "edit", [mode]);
   const [data, setData] =
     useState<Omit<FetusInputData, "id">>(initialFetusData);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleChange = (
     key: keyof Omit<FetusInputData, "id">,
@@ -79,6 +87,16 @@ const FetusInputModal: FC<FetusInputModalProps> = ({
     });
     if (!isEdit) setData(initialFetusData);
     onClose();
+  };
+
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || data.dueDate;
+    setShowDatePicker(Platform.OS === "ios");
+    handleChange("dueDate", currentDate);
+  };
+
+  const showDatepicker = () => {
+    setShowDatePicker(true);
   };
 
   useEffect(() => {
@@ -133,14 +151,41 @@ const FetusInputModal: FC<FetusInputModalProps> = ({
                   />
 
                   <Text style={styles.inputLabel}>Due date</Text>
-                  <DateTimePicker
-                    value={data.dueDate}
-                    mode="date"
-                    onChange={(_, date) => {
-                      if (date) handleChange("dueDate", date);
-                    }}
-                    accentColor={theme.primary}
-                  />
+
+                  {Platform.OS === "android" ? (
+                    <>
+                      <TouchableOpacity
+                        style={styles.datePickerButton}
+                        onPress={showDatepicker}
+                      >
+                        <Text style={styles.datePickerText}>
+                          {format(data.dueDate, "MMM dd, yyyy")}
+                        </Text>
+                        <Feather
+                          name="calendar"
+                          size={20}
+                          color={theme.secondary}
+                        />
+                      </TouchableOpacity>
+                      {showDatePicker && (
+                        <DateTimePicker
+                          value={data.dueDate}
+                          mode="date"
+                          display="default"
+                          onChange={handleDateChange}
+                          accentColor={theme.primary}
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <DateTimePicker
+                      value={data.dueDate}
+                      mode="date"
+                      display="default"
+                      onChange={handleDateChange}
+                      accentColor={theme.primary}
+                    />
+                  )}
 
                   <Text style={styles.inputLabel}>Baby's gender</Text>
                   <TouchableOpacity
@@ -300,6 +345,16 @@ const styles = StyleSheet.create({
     color: theme.textPrimary,
     fontSize: 16,
     fontWeight: "bold",
+  },
+  datePickerButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: theme.borderPrimary,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 14,
   },
 });
 
