@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import {
   View,
@@ -7,10 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  StatusBar,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+
 import useSession from '@/hooks/useSession';
 import { theme } from '@/styles/theme';
 
@@ -23,7 +21,7 @@ const ProfileScreen = () => {
     {
       icon: <Ionicons name='person-outline' size={24} color={theme.primary} />,
       title: 'My profile',
-      onPress: () => router.push('/edit-profile'),
+      onPress: () => router.push('/edit-profile/edit-profile-screen'),
     },
     // {
     //   icon: <FontAwesome5 name='baby-carriage' size={24} color='#2AA1AF' />,
@@ -37,8 +35,8 @@ const ProfileScreen = () => {
     // },
     {
       icon: <FontAwesome5 name='seedling' size={24} color={theme.primary} />,
-      title: 'My Fatus',
-      // onPress: () => router.push('/baby-center'),
+      title: 'My Fetus',
+      onPress: () => router.push('/manage-fetus'),
     },
     // {
     //   icon: <Ionicons name='chatbubble-outline' size={24} color='#2AA1AF' />,
@@ -86,11 +84,6 @@ const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle='light-content' />
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>More</Text>
-      </View>
-
       <View style={styles.menuContainer}>
         {menuItems.map((item, index) => (
           <React.Fragment key={index}>
@@ -111,17 +104,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  header: {
-    backgroundColor: theme.primary,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  headerTitle: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: '500',
   },
   menuContainer: {
     flex: 1,
@@ -152,7 +134,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderTopWidth: 1,
     borderTopColor: '#EEEEEE',
-    paddingBottom: 25, // Extra padding for iPhone X and newer
+    paddingBottom: 25,
     paddingTop: 10,
   },
   tabItem: {

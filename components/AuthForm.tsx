@@ -1,19 +1,19 @@
-import { Link, useRouter } from "expo-router";
+import { Link } from "expo-router";
 import { FC, useRef, useState } from "react";
 import {
   Animated,
-  Image,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { ActivityIndicator, View } from "@ant-design/react-native";
+import { View } from "@ant-design/react-native";
 
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "@/styles/theme";
+import LoadingView from "./LoadingView";
 
 type AuthFormType = {
   email: string;
@@ -26,7 +26,6 @@ type AuthFormPropsType = {
 };
 
 const AuthForm: FC<AuthFormPropsType> = ({ mode, onSubmit }) => {
-  const router = useRouter();
   const [auth, setAuth] = useState<AuthFormType>({
     email: "",
     password: "",
@@ -51,10 +50,17 @@ const AuthForm: FC<AuthFormPropsType> = ({ mode, onSubmit }) => {
     }).start();
 
     try {
+      // Pass the credentials to the parent component to handle the authentication logic
       await onSubmit(auth.email, auth.password);
-      router.push(mode === "sign-in" ? "/(app)/(tabs)/(home)" : "/sign-in");
+      // No need to navigate here - the parent component will handle it
     } catch (error) {
       console.error("Authentication error:", error);
+      // Reset animation if there's an error
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
     } finally {
       setLoading(false);
     }
@@ -67,20 +73,10 @@ const AuthForm: FC<AuthFormPropsType> = ({ mode, onSubmit }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.contentContainer}>
-        {loading ? (
-          <>
-            <View style={styles.viewLoading}>
-              <Image
-                style={styles.tinyLogo}
-                source={require("../assets/images/Group 34499.png")}
-              />
-              <Text style={styles.titleLoading}>PregnaCare</Text>
-            </View>
-
-            <ActivityIndicator size="large" color={theme.primary} />
-          </>
-        ) : (
+      {loading ? (
+        <LoadingView />
+      ) : (
+        <View style={styles.contentContainer}>
           <Animated.View
             style={[styles.formCard, { transform: [{ translateY }] }]}
           >
@@ -173,8 +169,8 @@ const AuthForm: FC<AuthFormPropsType> = ({ mode, onSubmit }) => {
               </Link>
             )}
           </Animated.View>
-        )}
-      </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
