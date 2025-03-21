@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import { Redirect, Tabs, router } from "expo-router";
+import React, { useEffect } from 'react';
+import { Redirect, Tabs, router } from 'expo-router';
 
-import Ionicons from "@expo/vector-icons/Ionicons";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Ionicons from '@expo/vector-icons/Ionicons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-import CalendarHeaderRight from "@/components/Header/CalendarHeaderRight";
-import useSession from "@/hooks/useSession";
-import { theme } from "@/styles/theme";
-import LoadingView from "@/components/LoadingView";
-import { FontAwesome6 } from "@expo/vector-icons";
+import CalendarHeaderRight from '@/components/Header/CalendarHeaderRight';
+import useSession from '@/hooks/useSession';
+import { theme } from '@/styles/theme';
+import LoadingView from '@/components/LoadingView';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 const TabsLayout = () => {
   const {
@@ -20,7 +20,7 @@ const TabsLayout = () => {
   // Add an effect to ensure we redirect if authentication state changes
   useEffect(() => {
     if (!isLoading && !isFetchingUser && !authenticated) {
-      router.replace("/sign-in");
+      router.replace('/sign-in');
     }
   }, [authenticated, isLoading, isFetchingUser]);
 
@@ -30,7 +30,7 @@ const TabsLayout = () => {
 
   // If not authenticated, redirect to sign-in
   if (!authenticated) {
-    return <Redirect href="/sign-in" />;
+    return <Redirect href='/sign-in' />;
   }
 
   return (
@@ -48,59 +48,59 @@ const TabsLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="(home)"
+        name='(home)'
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? "home-sharp" : "home-outline"}
+              name={focused ? 'home-sharp' : 'home-outline'}
               size={30}
               color={color}
             />
           ),
-          tabBarLabel: "Home",
+          tabBarLabel: 'Home',
           headerShown: false,
         }}
       />
       <Tabs.Screen
-        name="(calendar)/index"
+        name='(calendar)/index'
         options={{
           tabBarIcon: ({ color, focused }) => (
             <FontAwesome
-              name={focused ? "calendar" : "calendar"}
+              name={focused ? 'calendar' : 'calendar'}
               size={28}
               color={color}
             />
           ),
-          tabBarLabel: "Calendar",
-          title: "My Calendar",
+          tabBarLabel: 'Calendar',
+          title: 'My Calendar',
           headerRight: CalendarHeaderRight,
         }}
       />
       <Tabs.Screen
-        name="(tracking)"
+        name='(tracking)'
         options={{
           tabBarIcon: ({ color, focused }) => (
             <FontAwesome6
-              name={focused ? "chart-simple" : "chart-simple"}
+              name={focused ? 'chart-simple' : 'chart-simple'}
               size={24}
               color={color}
             />
           ),
-          tabBarLabel: "Tracking",
+          tabBarLabel: 'Tracking',
           headerShown: false,
         }}
       />
       <Tabs.Screen
-        name="(profile)"
+        name='(profile)'
         options={{
           tabBarIcon: ({ color, focused }) => (
             <FontAwesome
-              name={focused ? "user-circle" : "user-circle-o"}
+              name={focused ? 'user-circle' : 'user-circle-o'}
               size={28}
               color={color}
             />
           ),
-          tabBarLabel: "Profile",
+          tabBarLabel: 'Profile',
           headerShown: false,
         }}
       />

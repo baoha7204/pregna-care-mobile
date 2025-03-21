@@ -1,7 +1,7 @@
-import { StyleSheet, ScrollView } from "react-native";
-import React from "react";
+import { StyleSheet, ScrollView } from 'react-native';
+import React from 'react';
 
-import BlogPreview from "@/components/Blog/BlogPreview";
+import BlogPreview from '@/components/Blog/BlogPreview';
 
 const HomeScreen = () => {
   return (
@@ -14,7 +14,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF5F5",
+    backgroundColor: '#FFF5F5',
   },
 });
 
