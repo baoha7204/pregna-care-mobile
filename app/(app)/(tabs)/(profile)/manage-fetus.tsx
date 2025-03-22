@@ -19,6 +19,7 @@ const ManageFetusScreen = () => {
     handleEditFetus,
     handleSoftDeleteFetus,
     isLoading,
+    fetchFetuses,
   } = useFetuses();
 
   const handleSave = async (fetusData: FetusDto) => {
@@ -27,6 +28,12 @@ const ManageFetusScreen = () => {
     } else {
       await handleEditFetus(editingFetus.id, fetusData);
     }
+    fetchFetuses();
+  };
+
+  const handleDelete = async (fetusId: string) => {
+    await handleSoftDeleteFetus(fetusId);
+    fetchFetuses();
   };
 
   return (
@@ -37,7 +44,7 @@ const ManageFetusScreen = () => {
           <FetusItem
             data={item}
             onPress={() => handleEditMode(item)}
-            onDelete={handleSoftDeleteFetus}
+            onDelete={handleDelete}
           />
         )}
         keyExtractor={(item) => item.id}

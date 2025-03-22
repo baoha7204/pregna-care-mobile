@@ -23,6 +23,7 @@ export type FetusDto = {
 
 type FetusesContextType = {
   fetuses: Fetus[];
+  fetchFetuses: () => Promise<void>;
   currentFetus: Fetus | null;
   switchFetus: (fetus: Fetus) => void;
   editingFetus: Fetus | null;
@@ -38,6 +39,7 @@ type FetusesContextType = {
 
 const FetusesContext = createContext<FetusesContextType>({
   fetuses: [],
+  fetchFetuses: () => Promise.resolve(),
   currentFetus: null,
   switchFetus: () => {},
   editingFetus: null,
@@ -80,7 +82,6 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
 
       setFetuses([...fetuses, { ...addedFetus, weeks }]);
     } catch (error) {
-      console.error("Failed to add fetus:", error);
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +108,6 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
       });
       setFetuses(updatedFetuses);
     } catch (error) {
-      console.error("Failed to edit fetus:", error);
     } finally {
       setIsLoading(false);
     }
@@ -117,9 +117,7 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
     try {
       await customAxios.delete(`/fetuses/users/soft-delete/${fetusId}`);
       setFetuses(fetuses.filter((fetus) => fetus.id !== fetusId));
-    } catch (error) {
-      console.error("Failed to delete fetus:", error);
-    }
+    } catch (error) {}
   };
 
   const handleEditMode = (fetus: Fetus) => {
@@ -136,28 +134,26 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
     setIsAddFetusModalVisible(false);
   };
 
-  useEffect(() => {
-    const fetchFetuses = async () => {
-      try {
-        const result = await customAxios.get<ApiResponse<Fetus[]>>(
-          "/fetuses/users"
-        );
+  const fetchFetuses = async () => {
+    try {
+      const result = await customAxios.get<ApiResponse<Fetus[]>>(
+        "/fetuses/users"
+      );
 
-        // caclulate pregnancy weeks
-        let fetuses = result.data.data;
-        if (fetuses) {
-          fetuses = fetuses.map((fetus) => {
-            const weeks = calculatePregnancyWeek(fetus.dueDate, new Date());
-            return { ...fetus, weeks };
-          });
-          setCurrentFetus(fetuses[0]);
-          setFetuses(fetuses);
-        }
-      } catch (error) {
-        console.error("Failed to fetch fetuses:", error);
+      // caclulate pregnancy weeks
+      let fetuses = result.data.data;
+      if (fetuses) {
+        fetuses = fetuses.map((fetus) => {
+          const weeks = calculatePregnancyWeek(fetus.dueDate, new Date());
+          return { ...fetus, weeks };
+        });
+        setCurrentFetus(fetuses[0]);
+        setFetuses(fetuses);
       }
-    };
+    } catch (error) {}
+  };
 
+  useEffect(() => {
     if (authenticated && !isFetchingUser) {
       fetchFetuses();
     }
@@ -167,6 +163,7 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
     <FetusesContext.Provider
       value={{
         fetuses,
+        fetchFetuses,
         currentFetus,
         switchFetus,
         editingFetus,

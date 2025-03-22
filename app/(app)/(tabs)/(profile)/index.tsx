@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-} from "react-native";
-import { useRouter } from "expo-router";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
-import useSession from "@/hooks/useSession";
-import { theme } from "@/styles/theme";
+import useSession from '@/hooks/useSession';
+import { theme } from '@/styles/theme';
 
 const ProfileScreen = () => {
   const { signOut } = useSession();
@@ -19,9 +19,9 @@ const ProfileScreen = () => {
 
   const menuItems = [
     {
-      icon: <Ionicons name="person-outline" size={24} color={theme.primary} />,
-      title: "My profile",
-      onPress: () => router.push("/edit-profile"),
+      icon: <Ionicons name='person-outline' size={24} color={theme.primary} />,
+      title: 'My profile',
+      onPress: () => router.push('/edit-profile/edit-profile-screen'),
     },
     // {
     //   icon: <FontAwesome5 name='baby-carriage' size={24} color='#2AA1AF' />,
@@ -34,9 +34,9 @@ const ProfileScreen = () => {
     //   onPress: () => router.push('/settings'),
     // },
     {
-      icon: <FontAwesome5 name="seedling" size={24} color={theme.primary} />,
-      title: "My Fetus",
-      onPress: () => router.push("/manage-fetus"),
+      icon: <FontAwesome5 name='seedling' size={24} color={theme.primary} />,
+      title: 'My Fetus',
+      onPress: () => router.push('/manage-fetus'),
     },
     // {
     //   icon: <Ionicons name='chatbubble-outline' size={24} color='#2AA1AF' />,
@@ -76,8 +76,8 @@ const ProfileScreen = () => {
     //   onPress: () => router.push('/attribution'),
     // },
     {
-      icon: <Ionicons name="exit-outline" size={24} color={theme.primary} />,
-      title: "Log out",
+      icon: <Ionicons name='exit-outline' size={24} color={theme.primary} />,
+      title: 'Log out',
       onPress: () => signOut(),
     },
   ];
@@ -90,7 +90,7 @@ const ProfileScreen = () => {
             <TouchableOpacity style={styles.menuItem} onPress={item.onPress}>
               <View style={styles.iconContainer}>{item.icon}</View>
               <Text style={styles.menuItemText}>{item.title}</Text>
-              <Ionicons name="chevron-forward" size={20} color="#CCCCCC" />
+              <Ionicons name='chevron-forward' size={20} color='#CCCCCC' />
             </TouchableOpacity>
             {index < menuItems.length - 1 && <View style={styles.separator} />}
           </React.Fragment>
@@ -103,52 +103,52 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
   },
   menuContainer: {
     flex: 1,
     paddingTop: 5,
   },
   menuItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 15,
     paddingHorizontal: 20,
   },
   iconContainer: {
     width: 30,
-    alignItems: "center",
+    alignItems: 'center',
     marginRight: 15,
   },
   menuItemText: {
     flex: 1,
     fontSize: 16,
-    color: "#555555",
+    color: '#555555',
   },
   separator: {
     height: 1,
-    backgroundColor: "#EEEEEE",
+    backgroundColor: '#EEEEEE',
     marginLeft: 65,
   },
   bottomTabBar: {
-    flexDirection: "row",
+    flexDirection: 'row',
     borderTopWidth: 1,
-    borderTopColor: "#EEEEEE",
+    borderTopColor: '#EEEEEE',
     paddingBottom: 25,
     paddingTop: 10,
   },
   tabItem: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   tabLabel: {
     fontSize: 12,
     marginTop: 4,
-    color: "#999999",
+    color: '#999999',
   },
   activeTabLabel: {
-    color: "#2AA1AF",
+    color: '#2AA1AF',
   },
 });
 

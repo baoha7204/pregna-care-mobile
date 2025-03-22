@@ -78,7 +78,6 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
       }
       return null;
     } catch (error) {
-      console.error("Failed to sign up:", error);
       return null;
     }
   }, []);
@@ -94,7 +93,6 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
         setSession(result.data.data.accessToken);
       }
     } catch (error) {
-      console.error("Failed to verify OTP:", error);
       throw error;
     }
   }, []);
@@ -103,7 +101,7 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
     try {
       await customAxios.post("/auth/resend-otp", { userId, email });
     } catch (error) {
-      console.error("Failed to resend OTP:", error);
+      throw error;
     }
   }, []);
 
@@ -133,7 +131,6 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
 
       return true;
     } catch (error) {
-      console.error("Failed to sign in:", error);
       return false;
     }
   }, []);
@@ -144,9 +141,7 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
       setSession(null);
       setAuthenticated(false);
       delete customAxios.defaults.headers.common["Authorization"];
-    } catch (error) {
-      console.error("Failed to sign out:", error);
-    }
+    } catch (error) {}
   }, []);
 
   useEffect(() => {
@@ -176,7 +171,6 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
           setAuthenticated(false);
         }
       } catch (error) {
-        console.error("Failed to fetch user:", error);
         setUser(null);
         setAuthenticated(false);
       } finally {

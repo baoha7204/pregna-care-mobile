@@ -1,7 +1,8 @@
-import { customAxios } from '@/api/core';
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
-import { RadarChart } from 'react-native-gifted-charts';
+import { customAxios } from "@/api/core";
+import useFetuses from "@/hooks/useFetuses";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
+import { RadarChart } from "react-native-gifted-charts";
 
 // Define types for chart data
 interface ChartDataItem {
@@ -10,23 +11,27 @@ interface ChartDataItem {
   value: string; // 'min', 'max', or 'current'
 }
 
-function RadarGrowthChart() {
-  const fetusId = '67c07b40a1af2f866632aae5';
-  const week = 11;
+type RadarGrowthChartTypeProps = {
+  selectWeek: number;
+};
+
+function RadarGrowthChart({ selectWeek }: RadarGrowthChartTypeProps) {
+  const { currentFetus } = useFetuses();
   const [data, setData] = useState<ChartDataItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const currentColor = 'rgba(255, 69, 0, 1.0)';
-  const minColor = 'rgba(30, 144, 255, 1.0)';
-  const maxColor = 'rgba(50, 205, 50, 1.0)';
+  const currentColor = "rgba(255, 69, 0, 1.0)";
+  const minColor = "rgba(30, 144, 255, 1.0)";
+  const maxColor = "rgba(50, 205, 50, 1.0)";
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await customAxios.get(`/growth-metric/chart-radar/${fetusId}/${week}`);
-        console.log("response", response.data);
+        const response = await customAxios.get(
+          `/growth-metric/chart-radar/${currentFetus?.id}/${selectWeek}`
+        );
 
         if (response.data.success) {
           setData(response.data.data);
@@ -34,8 +39,7 @@ function RadarGrowthChart() {
           setError("No data available");
         }
       } catch (error) {
-        console.log("error", error);
-        setError("Failed to load chart data");
+        setError("");
       } finally {
         setIsLoading(false);
       }
@@ -56,18 +60,20 @@ function RadarGrowthChart() {
   if (error) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>{error || "Unable to display chart data"}</Text>
+        <Text style={styles.errorText}>
+          {error || "Unable to display chart data"}
+        </Text>
       </View>
     );
   }
 
   // Extract current values for the chart
-  const currentData = data.filter(item => item.value === 'current');
-  const minData = data.filter(item => item.value === 'min');
-  const maxData = data.filter(item => item.value === 'max');
+  const currentData = data.filter((item) => item.value === "current");
+  const minData = data.filter((item) => item.value === "min");
+  const maxData = data.filter((item) => item.value === "max");
 
-  const chartValues = currentData.map(item => item.score);
-  const labels = currentData.map(item => item.item);
+  const chartValues = currentData.map((item) => item.score);
+  const labels = currentData.map((item) => item.item);
   const maxValue = Math.max(...chartValues, 100) + 50; // Adding margin for better scaling
 
   return (
@@ -77,16 +83,18 @@ function RadarGrowthChart() {
       <RadarChart
         data={chartValues}
         labels={labels}
-        labelConfig={{ stroke: 'blue', fontWeight: 'bold' }}
-        dataLabels={chartValues.map(val => `${val}`)}
-        dataLabelsConfig={{ stroke: 'brown' }}
+        labelConfig={{ stroke: "blue", fontWeight: "bold" }}
+        dataLabels={chartValues.map((val) => `${val}`)}
+        dataLabelsConfig={{ stroke: "brown" }}
         dataLabelsPositionOffset={0}
         maxValue={maxValue}
       />
 
       <View style={styles.legendContainer}>
         <View style={styles.legendItem}>
-          <View style={[styles.legendColor, { backgroundColor: currentColor }]} />
+          <View
+            style={[styles.legendColor, { backgroundColor: currentColor }]}
+          />
           <Text style={styles.legendText}>Current</Text>
         </View>
         <View style={styles.legendItem}>
@@ -109,25 +117,25 @@ function RadarGrowthChart() {
 const styles = StyleSheet.create({
   container: {
     padding: 15,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 10,
     margin: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 10,
   },
   legendContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     marginTop: 10,
   },
   legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginHorizontal: 10,
   },
   legendColor: {
@@ -141,18 +149,18 @@ const styles = StyleSheet.create({
   },
   note: {
     fontSize: 12,
-    textAlign: 'center',
-    color: 'gray',
+    textAlign: "center",
+    color: "gray",
     marginTop: 10,
   },
   errorText: {
     fontSize: 16,
-    color: 'red',
-    textAlign: 'center',
+    color: "red",
+    textAlign: "center",
   },
   loadingText: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 10,
   },
 });
