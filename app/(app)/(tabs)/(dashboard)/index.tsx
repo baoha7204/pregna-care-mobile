@@ -409,7 +409,10 @@ const Dashboard = () => {
           <>
             {/* Baby Overview */}
             {currentFetus && (
-              <BabyOverview fetus={currentFetus} latestWeek={latestWeek} />
+              <BabyOverview
+                fetus={currentFetus}
+                latestWeek={currentFetus.weeks}
+              />
             )}
 
             {/* Tab Options for Overview and Chart */}
