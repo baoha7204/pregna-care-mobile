@@ -309,7 +309,6 @@ const Dashboard = () => {
           // }
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -339,7 +338,6 @@ const Dashboard = () => {
           setWeekInput("");
         }
       } catch (error) {
-        console.error("Error fetching growth metrics:", error);
       } finally {
         setLoading(false);
       }
