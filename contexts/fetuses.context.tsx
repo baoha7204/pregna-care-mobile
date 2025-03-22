@@ -117,6 +117,7 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
     try {
       await customAxios.delete(`/fetuses/users/soft-delete/${fetusId}`);
       setFetuses(fetuses.filter((fetus) => fetus.id !== fetusId));
+      fetchFetuses();
     } catch (error) {}
   };
 

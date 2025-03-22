@@ -172,6 +172,7 @@ const AuthForm: FC<AuthFormPropsType> = ({ mode, onSubmit }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
     backgroundColor: theme.primaryLight,
   },
   contentContainer: {
