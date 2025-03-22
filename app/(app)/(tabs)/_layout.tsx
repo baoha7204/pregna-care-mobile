@@ -90,7 +90,6 @@ const TabsLayout = () => {
           headerShown: false,
         }}
       />
-
       <Tabs.Screen
         name="(dashboard)/index"
         options={{
