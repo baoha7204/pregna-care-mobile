@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -18,17 +18,7 @@ import { customAxios } from "@/api/core";
 import { theme } from "@/styles/theme";
 import FetusSelectionModal from "@/components/Header/FetusSelectionModal";
 import useFetuses from "@/hooks/useFetuses";
-
-interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  avatarUrl: string;
-  membership: {
-    plan: string;
-    dueDate: string | null;
-  };
-}
+import { useFocusEffect } from "expo-router";
 
 interface Fetus {
   id: string;
@@ -270,8 +260,6 @@ const GrowthChart = ({
 };
 
 const Dashboard = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [selectedFetus, setSelectedFetus] = useState<Fetus | null>(null);
   const [growthMetrics, setGrowthMetrics] = useState<GrowthMetric[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState("Weight");
@@ -285,66 +273,37 @@ const Dashboard = () => {
     setModalVisible(!modalVisible);
   };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const { data: userData } = await customAxios.get("/users/self");
-        setUser(userData.data);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchGrowthMetrics = async () => {
+        if (!currentFetus) return;
 
-        const { data: fetusesData } = await customAxios.get(
-          `/fetuses/users/${userData.data.id}`
-        );
-
-        if (fetusesData.data.length > 0) {
+        try {
+          setLoading(true);
           const { data: metricsData } = await customAxios.get(
-            `/growth-metric/find-all-by-fetus/${currentFetus?.id}`
+            `/growth-metric/find-all-by-fetus/${currentFetus.id}`
           );
 
-          // setGrowthMetrics(metricsData.data);
-          // if (metricsData.data.length > 0) {
-          //   const latestWeek =
-          //     metricsData.data[metricsData.data.length - 1].week;
-          //   setSelectedWeek(latestWeek);
-          //   setWeekInput(latestWeek.toString());
-          // }
+          setGrowthMetrics(metricsData.data);
+          if (metricsData.data.length > 0) {
+            const latestWeek =
+              metricsData.data[metricsData.data.length - 1].week;
+            setSelectedWeek(latestWeek);
+            setWeekInput(latestWeek.toString());
+          } else {
+            // Reset metrics data if there are no metrics for the current fetus
+            setSelectedWeek(null);
+            setWeekInput("");
+          }
+        } catch (error) {
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchUserData();
-  }, []);
-
-  useEffect(() => {
-    const fetchGrowthMetrics = async () => {
-      if (!currentFetus) return;
-
-      try {
-        setLoading(true);
-        const { data: metricsData } = await customAxios.get(
-          `/growth-metric/find-all-by-fetus/${currentFetus.id}`
-        );
-
-        setGrowthMetrics(metricsData.data);
-        if (metricsData.data.length > 0) {
-          const latestWeek = metricsData.data[metricsData.data.length - 1].week;
-          setSelectedWeek(latestWeek);
-          setWeekInput(latestWeek.toString());
-        } else {
-          // Reset metrics data if there are no metrics for the current fetus
-          setSelectedWeek(null);
-          setWeekInput("");
-        }
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGrowthMetrics();
-  }, [currentFetus]);
+      fetchGrowthMetrics();
+    }, [currentFetus])
+  );
 
   const getAvailableMetrics = () => {
     const metrics = new Set<string>();
