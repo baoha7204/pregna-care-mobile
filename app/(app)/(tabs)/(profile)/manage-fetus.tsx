@@ -31,6 +31,11 @@ const ManageFetusScreen = () => {
     fetchFetuses();
   };
 
+  const handleDelete = async (fetusId: string) => {
+    await handleSoftDeleteFetus(fetusId);
+    fetchFetuses();
+  };
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <FlatList
@@ -39,7 +44,7 @@ const ManageFetusScreen = () => {
           <FetusItem
             data={item}
             onPress={() => handleEditMode(item)}
-            onDelete={handleSoftDeleteFetus}
+            onDelete={handleDelete}
           />
         )}
         keyExtractor={(item) => item.id}
