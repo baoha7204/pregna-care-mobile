@@ -19,6 +19,7 @@ const ManageFetusScreen = () => {
     handleEditFetus,
     handleSoftDeleteFetus,
     isLoading,
+    fetchFetuses,
   } = useFetuses();
 
   const handleSave = async (fetusData: FetusDto) => {
@@ -27,6 +28,7 @@ const ManageFetusScreen = () => {
     } else {
       await handleEditFetus(editingFetus.id, fetusData);
     }
+    fetchFetuses();
   };
 
   return (

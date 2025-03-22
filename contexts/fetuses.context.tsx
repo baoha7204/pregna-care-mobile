@@ -23,6 +23,7 @@ export type FetusDto = {
 
 type FetusesContextType = {
   fetuses: Fetus[];
+  fetchFetuses: () => Promise<void>;
   currentFetus: Fetus | null;
   switchFetus: (fetus: Fetus) => void;
   editingFetus: Fetus | null;
@@ -38,6 +39,7 @@ type FetusesContextType = {
 
 const FetusesContext = createContext<FetusesContextType>({
   fetuses: [],
+  fetchFetuses: () => Promise.resolve(),
   currentFetus: null,
   switchFetus: () => {},
   editingFetus: null,
@@ -132,26 +134,26 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
     setIsAddFetusModalVisible(false);
   };
 
+  const fetchFetuses = async () => {
+    try {
+      const result = await customAxios.get<ApiResponse<Fetus[]>>(
+        "/fetuses/users"
+      );
+
+      // caclulate pregnancy weeks
+      let fetuses = result.data.data;
+      if (fetuses) {
+        fetuses = fetuses.map((fetus) => {
+          const weeks = calculatePregnancyWeek(fetus.dueDate, new Date());
+          return { ...fetus, weeks };
+        });
+        setCurrentFetus(fetuses[0]);
+        setFetuses(fetuses);
+      }
+    } catch (error) {}
+  };
+
   useEffect(() => {
-    const fetchFetuses = async () => {
-      try {
-        const result = await customAxios.get<ApiResponse<Fetus[]>>(
-          "/fetuses/users"
-        );
-
-        // caclulate pregnancy weeks
-        let fetuses = result.data.data;
-        if (fetuses) {
-          fetuses = fetuses.map((fetus) => {
-            const weeks = calculatePregnancyWeek(fetus.dueDate, new Date());
-            return { ...fetus, weeks };
-          });
-          setCurrentFetus(fetuses[0]);
-          setFetuses(fetuses);
-        }
-      } catch (error) {}
-    };
-
     if (authenticated && !isFetchingUser) {
       fetchFetuses();
     }
@@ -161,6 +163,7 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
     <FetusesContext.Provider
       value={{
         fetuses,
+        fetchFetuses,
         currentFetus,
         switchFetus,
         editingFetus,
