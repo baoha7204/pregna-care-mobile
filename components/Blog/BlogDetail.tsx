@@ -45,7 +45,6 @@ const BlogDetail = () => {
         const response = await customAxios.get(`/blog-post/${id}`);
         setBlogData(response.data.data);
       } catch (err) {
-        console.error("Failed to fetch blog detail:", err);
         setError("Failed to load blog post");
       } finally {
         setLoading(false);

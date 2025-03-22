@@ -54,7 +54,6 @@ const AuthForm: FC<AuthFormPropsType> = ({ mode, onSubmit }) => {
       await onSubmit(auth.email, auth.password);
       // No need to navigate here - the parent component will handle it
     } catch (error) {
-      console.error("Authentication error:", error);
       // Reset animation if there's an error
       Animated.timing(translateY, {
         toValue: 0,
@@ -64,11 +63,6 @@ const AuthForm: FC<AuthFormPropsType> = ({ mode, onSubmit }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleGoogleSignIn = () => {
-    // Implement Google sign-in
-    console.log("Signing in with Google");
   };
 
   return (
@@ -136,7 +130,7 @@ const AuthForm: FC<AuthFormPropsType> = ({ mode, onSubmit }) => {
             </View>
 
             {/* Google Sign In Button */}
-            {mode === "sign-in" && (
+            {/* {mode === "sign-in" && (
               <TouchableOpacity
                 style={styles.googleButton}
                 onPress={handleGoogleSignIn}
@@ -148,7 +142,7 @@ const AuthForm: FC<AuthFormPropsType> = ({ mode, onSubmit }) => {
                   </Text>
                 </View>
               </TouchableOpacity>
-            )}
+            )} */}
 
             {/* Create Account Link */}
             {mode === "sign-in" ? (

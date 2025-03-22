@@ -51,7 +51,6 @@ const BlogPreview = () => {
         });
         setBlogData(response.data.data);
       } catch (err: any) {
-        console.error("Failed to fetch blog preview:", err);
         if (err.response?.status === 404) {
           setError("No blog post available for this week");
           setBlogData(null);

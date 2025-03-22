@@ -78,8 +78,6 @@ export default function TrackingScreen() {
                   <Text style={styles.metricLabel}>Trimester</Text>
                 </View>
               </View>
-              
-
 
               <Text style={styles.sectionTitle}>Tracking Tools</Text>
               <View style={styles.trackingOptions}>
@@ -103,18 +101,17 @@ export default function TrackingScreen() {
                     Track weight, length, and head size
                   </Text>
                 </TouchableOpacity>
+                <View style={styles.chartContainer}>
+                  <RadarGrowthChart selectWeek={currentFetus.weeks} />
+                </View>
               </View>
             </>
           ) : (
             <>
-            <Text style={styles.noFetusText}>
-              Please select or add a baby to start tracking
-            </Text>
-                <View style={styles.chartContainer}>
-                  <RadarGrowthChart />
-                </View>
+              <Text style={styles.noFetusText}>
+                Please select or add a baby to start tracking
+              </Text>
             </>
-              
           )}
         </View>
         <FetusSelectionModal
@@ -257,6 +254,6 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     marginVertical: 20,
-    width: '100%',
+    width: "100%",
   },
 });
