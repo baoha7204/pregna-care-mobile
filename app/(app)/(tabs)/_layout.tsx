@@ -90,7 +90,22 @@ const TabsLayout = () => {
           headerShown: false,
         }}
       />
-      <Tabs.Screen
+        <Tabs.Screen
+            name="(dashboard)/index"
+            options={{
+                tabBarIcon: ({ color, focused }) => (
+                    <FontAwesome6
+                        name={focused ? "gauge-high" : "gauge-high"}
+                        size={24}
+                        color={color}
+                    />
+                ),
+                tabBarLabel: "Dashboard",
+                headerShown: false,
+            }}
+        />
+
+        <Tabs.Screen
         name="(profile)"
         options={{
           tabBarIcon: ({ color, focused }) => (
