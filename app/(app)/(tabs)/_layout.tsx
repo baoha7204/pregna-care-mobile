@@ -106,7 +106,8 @@ const TabsLayout = () => {
       />
         {/*fix*/}
       <Tabs.Screen
-        name="(profile)"
+      // thêm vào để fix lỗi
+        name="(profile)" 
         options={{
           tabBarIcon: ({ color, focused }) => (
             <FontAwesome
