@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -10,18 +10,18 @@ import {
   Image,
   Platform,
   ActivityIndicator,
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons';
-import { theme } from '@/styles/theme';
-import useUsers from '@/hooks/useUsers';
-import LoadingView from '@/components/LoadingView';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Picker } from '@react-native-picker/picker';
-import * as ImagePicker from 'expo-image-picker';
+} from "react-native";
+import { useRouter } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
+import { theme } from "@/styles/theme";
+import useUsers from "@/hooks/useUsers";
+import LoadingView from "@/components/LoadingView";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from "expo-image-picker";
 
 // Blood type options
-const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 // Define types for form data
 interface ProfileFormData {
@@ -43,11 +43,11 @@ const UpdateProfileForm: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
 
   const [formData, setFormData] = useState<ProfileFormData>({
-    firstName: '',
-    lastName: '',
-    phoneNumber: '',
-    nationality: '',
-    bloodType: 'A+',
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    nationality: "",
+    bloodType: "A+",
     dateOfBirth: new Date(),
   });
 
@@ -55,11 +55,11 @@ const UpdateProfileForm: React.FC = () => {
   useEffect(() => {
     if (user) {
       setFormData({
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        phoneNumber: user.phoneNumber || '',
-        nationality: user.nationality || '',
-        bloodType: user.bloodType || 'A+',
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        phoneNumber: user.phoneNumber || "",
+        nationality: user.nationality || "",
+        bloodType: user.bloodType || "A+",
         dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : new Date(),
       });
     }
@@ -76,7 +76,7 @@ const UpdateProfileForm: React.FC = () => {
   };
 
   const handleDateChange = (_event: any, selectedDate?: Date) => {
-    setShowDatePicker(Platform.OS === 'ios');
+    setShowDatePicker(Platform.OS === "ios");
     if (selectedDate) {
       setFormData({
         ...formData,
@@ -90,36 +90,31 @@ const UpdateProfileForm: React.FC = () => {
       // Kiểm tra và yêu cầu quyền truy cập
       const { status } =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
-      console.log('Permission status:', status);
 
-      if (status !== 'granted') {
+      if (status !== "granted") {
         Alert.alert(
-          'Permission needed',
-          'Please grant camera roll permissions to upload an avatar'
+          "Permission needed",
+          "Please grant camera roll permissions to upload an avatar"
         );
         return;
       }
 
       // Sử dụng API mới của ImagePicker
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: 'images', // Sử dụng string thay vì enum để tránh cảnh báo
+        mediaTypes: "images", // Sử dụng string thay vì enum để tránh cảnh báo
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.8,
       });
 
-      console.log('Image picker result:', result);
-
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const selectedImage = result.assets[0].uri;
-        console.log('Selected image URI:', selectedImage);
         setAvatar(selectedImage);
       }
     } catch (error) {
-      console.error('Error picking image:', error);
       Alert.alert(
-        'Error',
-        'Failed to pick image from gallery. ' +
+        "Error",
+        "Failed to pick image from gallery. " +
           (error instanceof Error ? error.message : String(error))
       );
     }
@@ -145,15 +140,14 @@ const UpdateProfileForm: React.FC = () => {
         setIsUploading(false);
       }
 
-      Alert.alert('Success', 'Profile updated successfully', [
+      Alert.alert("Success", "Profile updated successfully", [
         {
-          text: 'OK',
+          text: "OK",
           onPress: () => router.back(),
         },
       ]);
     } catch (error: any) {
-      console.error('Profile update error:', error);
-      Alert.alert('Error', error.message || 'Failed to update profile');
+      Alert.alert("Error", error.message || "Failed to update profile");
     } finally {
       setIsSubmitting(false);
     }
@@ -161,11 +155,11 @@ const UpdateProfileForm: React.FC = () => {
 
   const validateForm = () => {
     if (!formData.firstName.trim()) {
-      Alert.alert('Error', 'First name is required');
+      Alert.alert("Error", "First name is required");
       return false;
     }
     if (!formData.lastName.trim()) {
-      Alert.alert('Error', 'Last name is required');
+      Alert.alert("Error", "Last name is required");
       return false;
     }
 
@@ -193,7 +187,7 @@ const UpdateProfileForm: React.FC = () => {
         >
           {isUploading ? (
             <View style={styles.avatarPlaceholder}>
-              <ActivityIndicator size='large' color={theme.primary} />
+              <ActivityIndicator size="large" color={theme.primary} />
             </View>
           ) : avatar ? (
             <Image source={{ uri: avatar }} style={styles.avatar} />
@@ -201,11 +195,11 @@ const UpdateProfileForm: React.FC = () => {
             <Image source={{ uri: user.avatarUrl }} style={styles.avatar} />
           ) : (
             <View style={styles.avatarPlaceholder}>
-              <FontAwesome name='user' size={60} color='#ccc' />
+              <FontAwesome name="user" size={60} color="#ccc" />
             </View>
           )}
           <View style={styles.editBadge}>
-            <FontAwesome name='camera' size={14} color='#fff' />
+            <FontAwesome name="camera" size={14} color="#fff" />
           </View>
         </TouchableOpacity>
       </View>
@@ -220,8 +214,8 @@ const UpdateProfileForm: React.FC = () => {
           <TextInput
             style={styles.input}
             value={formData.firstName}
-            onChangeText={(value) => handleChange('firstName', value)}
-            placeholder='Enter your first name'
+            onChangeText={(value) => handleChange("firstName", value)}
+            placeholder="Enter your first name"
             editable={!isSubmitting}
           />
           <Text style={styles.fieldDescription}>Your legal first name</Text>
@@ -234,8 +228,8 @@ const UpdateProfileForm: React.FC = () => {
           <TextInput
             style={styles.input}
             value={formData.lastName}
-            onChangeText={(value) => handleChange('lastName', value)}
-            placeholder='Enter your last name'
+            onChangeText={(value) => handleChange("lastName", value)}
+            placeholder="Enter your last name"
             editable={!isSubmitting}
           />
           <Text style={styles.fieldDescription}>Your legal last name</Text>
@@ -248,9 +242,9 @@ const UpdateProfileForm: React.FC = () => {
           <TextInput
             style={styles.input}
             value={formData.phoneNumber}
-            onChangeText={(value) => handleChange('phoneNumber', value)}
-            placeholder='Enter your phone number'
-            keyboardType='phone-pad'
+            onChangeText={(value) => handleChange("phoneNumber", value)}
+            placeholder="Enter your phone number"
+            keyboardType="phone-pad"
             editable={!isSubmitting}
           />
           <Text style={styles.fieldDescription}>
@@ -263,8 +257,8 @@ const UpdateProfileForm: React.FC = () => {
           <TextInput
             style={styles.input}
             value={formData.nationality}
-            onChangeText={(value) => handleChange('nationality', value)}
-            placeholder='Enter your nationality'
+            onChangeText={(value) => handleChange("nationality", value)}
+            placeholder="Enter your nationality"
             editable={!isSubmitting}
           />
           <Text style={styles.fieldDescription}>
@@ -279,7 +273,7 @@ const UpdateProfileForm: React.FC = () => {
           <View style={styles.pickerContainer}>
             <Picker
               selectedValue={formData.bloodType}
-              onValueChange={(value) => handleChange('bloodType', value)}
+              onValueChange={(value) => handleChange("bloodType", value)}
               style={styles.picker}
               enabled={!isSubmitting}
             >
@@ -310,8 +304,8 @@ const UpdateProfileForm: React.FC = () => {
         {showDatePicker && (
           <DateTimePicker
             value={formData.dateOfBirth}
-            mode='date'
-            display='default'
+            mode="date"
+            display="default"
             onChange={handleDateChange}
             maximumDate={new Date()}
           />
@@ -324,7 +318,7 @@ const UpdateProfileForm: React.FC = () => {
             disabled={isSubmitting}
           >
             {isSubmitting ? (
-              <ActivityIndicator color='white' size='small' />
+              <ActivityIndicator color="white" size="small" />
             ) : (
               <Text style={styles.buttonText}>Update Profile</Text>
             )}
@@ -338,28 +332,28 @@ const UpdateProfileForm: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
     color: theme.textPrimary,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
     paddingBottom: 8,
   },
   avatarContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 10,
     padding: 20,
-    position: 'relative',
+    position: "relative",
   },
   avatarWrapper: {
-    position: 'relative',
+    position: "relative",
     marginTop: 10,
     borderWidth: 3,
-    borderColor: '#f0f0f0',
+    borderColor: "#f0f0f0",
     borderRadius: 63, // 60 + 3 border
     padding: 3,
   },
@@ -372,24 +366,24 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#f0f0f0",
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
   },
   editBadge: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     right: 0,
     backgroundColor: theme.primary,
     width: 36,
     height: 36,
     borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 2,
-    borderColor: 'white',
+    borderColor: "white",
   },
   formContainer: {
     padding: 20,
@@ -399,42 +393,42 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
-    color: '#333',
+    color: "#333",
   },
   required: {
-    color: '#FF0000',
+    color: "#FF0000",
   },
   fieldDescription: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
     marginTop: 4,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     padding: 12,
     borderRadius: 5,
     fontSize: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 5,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   picker: {
     height: 50,
   },
   datePickerButton: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     padding: 12,
     borderRadius: 5,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   formActions: {
     marginTop: 20,
@@ -443,15 +437,15 @@ const styles = StyleSheet.create({
     backgroundColor: theme.primary,
     padding: 15,
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   disabledButton: {
-    backgroundColor: '#cccccc',
+    backgroundColor: "#cccccc",
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

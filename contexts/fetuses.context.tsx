@@ -80,7 +80,6 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
 
       setFetuses([...fetuses, { ...addedFetus, weeks }]);
     } catch (error) {
-      console.error("Failed to add fetus:", error);
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +106,6 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
       });
       setFetuses(updatedFetuses);
     } catch (error) {
-      console.error("Failed to edit fetus:", error);
     } finally {
       setIsLoading(false);
     }
@@ -117,9 +115,7 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
     try {
       await customAxios.delete(`/fetuses/users/soft-delete/${fetusId}`);
       setFetuses(fetuses.filter((fetus) => fetus.id !== fetusId));
-    } catch (error) {
-      console.error("Failed to delete fetus:", error);
-    }
+    } catch (error) {}
   };
 
   const handleEditMode = (fetus: Fetus) => {
@@ -153,9 +149,7 @@ const FetusesProvider = ({ children }: PropsWithChildren) => {
           setCurrentFetus(fetuses[0]);
           setFetuses(fetuses);
         }
-      } catch (error) {
-        console.error("Failed to fetch fetuses:", error);
-      }
+      } catch (error) {}
     };
 
     if (authenticated && !isFetchingUser) {

@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { createContext, PropsWithChildren } from 'react';
-import { Platform } from 'react-native';
-import { customAxios } from '@/api/core';
-import useSession from '@/hooks/useSession';
+import React, { useEffect, useState, useContext } from "react";
+import { createContext, PropsWithChildren } from "react";
+import { Platform } from "react-native";
+import { customAxios } from "@/api/core";
+import useSession from "@/hooks/useSession";
 
 // Define user types
 export type User = {
@@ -58,10 +58,10 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     if (session) {
       customAxios.defaults.headers.common[
-        'Authorization'
+        "Authorization"
       ] = `Bearer ${session}`;
     } else {
-      delete customAxios.defaults.headers.common['Authorization'];
+      delete customAxios.defaults.headers.common["Authorization"];
     }
   }, [session]);
 
@@ -79,14 +79,14 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
 
     try {
       if (!session) {
-        throw new Error('Authentication required');
+        throw new Error("Authentication required");
       }
 
       // Add a timeout to prevent hanging requests
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-      const response = await customAxios.put('/users/profile', userData, {
+      const response = await customAxios.put("/users/profile", userData, {
         signal: controller.signal,
       });
 
@@ -94,7 +94,7 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
 
       // Check if response has the expected structure
       if (!response.data || !response.data.data) {
-        throw new Error('Invalid response from server');
+        throw new Error("Invalid response from server");
       }
 
       const updatedUser = response.data.data;
@@ -102,21 +102,18 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
 
       return updatedUser;
     } catch (error: any) {
-      console.error('Error updating profile:', error);
-
       // Handle different types of errors
-      let errorMessage = 'Failed to update profile';
+      let errorMessage = "Failed to update profile";
 
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.error('Response error data:', error.response.data);
         errorMessage =
           error.response.data?.message ||
           `Server error: ${error.response.status}`;
       } else if (error.request) {
         // The request was made but no response was received
-        errorMessage = 'No response from server. Please check your connection.';
+        errorMessage = "No response from server. Please check your connection.";
       } else if (error.message) {
         // Something happened in setting up the request that triggered an Error
         errorMessage = error.message;
@@ -138,44 +135,34 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
 
     try {
       if (!session) {
-        throw new Error('Authentication required');
+        throw new Error("Authentication required");
       }
 
       // Create form data
       const formData = new FormData();
 
-      const filename = imageUri.split('/').pop();
-      const match = /\.(\w+)$/.exec(filename || '');
-      const type = match ? `image/${match[1]}` : 'image';
+      const filename = imageUri.split("/").pop();
+      const match = /\.(\w+)$/.exec(filename || "");
+      const type = match ? `image/${match[1]}` : "image";
 
       // Thay đổi tên trường từ 'avatar' thành 'file' hoặc tên trường mà server mong đợi
-      formData.append('file', {
+      formData.append("file", {
         // Thử dùng 'file' thay vì 'avatar'
         uri:
-          Platform.OS === 'android'
+          Platform.OS === "android"
             ? imageUri
-            : imageUri.replace('file://', ''),
+            : imageUri.replace("file://", ""),
         name: filename,
         type,
       } as any);
 
-      // Log thông tin chi tiết về request
-      console.log('Uploading avatar with form data:', {
-        filename,
-        type,
-        // Không log toàn bộ formData vì nó khó đọc
-      });
-
       // Thử gọi API với phương thức POST thay vì PUT
-      const response = await customAxios.put('/users/avatar/upload', formData, {
+      const response = await customAxios.put("/users/avatar/upload", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
         timeout: 15000, // Thiết lập timeout thay vì dùng AbortController
       });
-
-      console.log('Avatar upload response status:', response.status);
-      console.log('Avatar upload response data:', response.data);
 
       // Kiểm tra cấu trúc response
       let responseData;
@@ -184,7 +171,7 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
       } else if (response.data) {
         responseData = response.data;
       } else {
-        throw new Error('Invalid response from server');
+        throw new Error("Invalid response from server");
       }
 
       // Cập nhật trạng thái người dùng với URL avatar mới
@@ -198,16 +185,11 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
 
       return responseData;
     } catch (error: any) {
-      console.error('Error uploading avatar:', error);
-
       // Xử lý các loại lỗi khác nhau
-      let errorMessage = 'Failed to upload avatar';
+      let errorMessage = "Failed to upload avatar";
 
       if (error.response) {
         // Log toàn bộ response để debug
-        console.error('Response status:', error.response.status);
-        console.error('Response headers:', error.response.headers);
-        console.error('Response data:', error.response.data);
 
         if (error.response.data?.message) {
           errorMessage = error.response.data.message;
@@ -215,7 +197,7 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
           errorMessage = `Server error: ${error.response.status}`;
         }
       } else if (error.request) {
-        errorMessage = 'No response from server. Please check your connection.';
+        errorMessage = "No response from server. Please check your connection.";
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -236,24 +218,22 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
 
     try {
       if (!session) {
-        throw new Error('Authentication required');
+        throw new Error("Authentication required");
       }
 
       // Add a timeout to prevent hanging requests
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-      const response = await customAxios.get('/users/self', {
+      const response = await customAxios.get("/users/self", {
         signal: controller.signal,
       });
-
-      console.log('User profile response:', response);
 
       clearTimeout(timeoutId);
 
       // Check if response has the expected structure
       if (!response.data || !response.data.data) {
-        throw new Error('Invalid response from server');
+        throw new Error("Invalid response from server");
       }
 
       const userProfile = response.data.data;
@@ -261,25 +241,22 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
 
       return userProfile;
     } catch (error: any) {
-      console.error('Error fetching user profile:', error);
-
       // Handle different types of errors
-      let errorMessage = 'Failed to get user profile';
+      let errorMessage = "Failed to get user profile";
 
       if (error.response) {
-        console.error('Response error data:', error.response.data);
         errorMessage =
           error.response.data?.message ||
           `Server error: ${error.response.status}`;
 
         // Specific handling for common errors
         if (error.response.status === 403) {
-          errorMessage = 'Access denied. You may need to log in again.';
+          errorMessage = "Access denied. You may need to log in again.";
         } else if (error.response.status === 404) {
-          errorMessage = 'User profile not found.';
+          errorMessage = "User profile not found.";
         }
       } else if (error.request) {
-        errorMessage = 'No response from server. Please check your connection.';
+        errorMessage = "No response from server. Please check your connection.";
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -301,10 +278,9 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
           await getUserProfile();
         }
       } catch (error) {
-        console.error('Failed to fetch profile on mount:', error);
         // Only set error state if component is still mounted
         if (isMounted) {
-          setError('Could not load user profile. Please try again later.');
+          setError("Could not load user profile. Please try again later.");
         }
       }
     };

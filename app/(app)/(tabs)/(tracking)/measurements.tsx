@@ -107,7 +107,6 @@ export default function MeasurementsScreen() {
         setGrowthMetricHistory([]);
       }
     } catch (error) {
-      console.error("Error loading growth metric history:", error);
       setGrowthMetricHistory([]);
     } finally {
       setHistoryLoading(false);
@@ -169,7 +168,6 @@ export default function MeasurementsScreen() {
         setMeasurementTypes([]);
       }
     } catch (error) {
-      console.error("Error fetching fetus standards:", error);
       setMeasurementTypes([]);
     } finally {
       setLoading(false);
@@ -186,7 +184,6 @@ export default function MeasurementsScreen() {
   // Cải thiện hàm handleSave để đảm bảo dữ liệu được tải lại đúng cách
   const handleSave = async () => {
     if (!selectedWeek || !currentFetus || !currentFetus.id) {
-      console.error("Missing required data (week or fetus id)");
       return;
     }
 
@@ -233,14 +230,9 @@ export default function MeasurementsScreen() {
             }));
             setMeasurementTypes(savedMappedData);
           }, 100);
-        } catch (error) {
-          console.error("Error loading growth metric history:", error);
-        }
-      } else {
-        console.error("Error saving measurements:", response.data);
+        } catch (error) {}
       }
     } catch (error) {
-      console.error("Error saving measurements:", error);
     } finally {
       setLoading(false);
     }
@@ -316,14 +308,11 @@ export default function MeasurementsScreen() {
 
   if (!currentFetus) {
     return (
-      // <SafeAreaView style={styles.container}>
-      //   <Text style={styles.noFetusText}>
-      //     Please select a baby to track measurements
-      //   </Text>
-      // </SafeAreaView>
-      <View style={styles.chartContainer}>
-        <RadarGrowthChart />
-      </View>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.noFetusText}>
+          Please select a baby to track measurements
+        </Text>
+      </SafeAreaView>
     );
   }
 
@@ -419,6 +408,9 @@ export default function MeasurementsScreen() {
                       No measurement values found for this week
                     </Text>
                   )}
+                  <View style={styles.chartContainer}>
+                    <RadarGrowthChart selectWeek={selectedWeek} />
+                  </View>
                 </View>
               ) : selectedWeek ? (
                 <View style={styles.noMeasurementsContainer}>
@@ -806,6 +798,6 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     marginVertical: 20,
-    width: '100%',
+    width: "100%",
   },
 });
