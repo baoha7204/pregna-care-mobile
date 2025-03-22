@@ -104,7 +104,7 @@ const TabsLayout = () => {
           headerShown: false,
         }}
       />
-
+        {/*fix*/}
       <Tabs.Screen
         name="(profile)"
         options={{
