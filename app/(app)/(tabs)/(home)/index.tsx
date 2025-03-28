@@ -1,14 +1,21 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, ScrollView } from 'react-native';
+import React from 'react';
+
+import BlogPreview from '@/components/Blog/BlogPreview';
 
 const HomeScreen = () => {
   return (
-    <SafeAreaView>
-      <Text>Home screen</Text>
-    </SafeAreaView>
+    <ScrollView style={styles.container}>
+      <BlogPreview />
+    </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF5F5',
+  },
+});
 
 export default HomeScreen;
